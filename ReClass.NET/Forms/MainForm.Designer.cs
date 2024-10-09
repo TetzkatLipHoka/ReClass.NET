@@ -131,6 +131,7 @@ namespace ReClassNET.Forms
 			this.mainMenuStrip = new System.Windows.Forms.MenuStrip();
 			this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.attachToProcessToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.openDumpFileStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.reattachToProcessToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.detachToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
@@ -1056,7 +1057,8 @@ namespace ReClassNET.Forms
 			this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.attachToProcessToolStripMenuItem,
             this.reattachToProcessToolStripMenuItem,
-            this.detachToolStripMenuItem,
+			this.openDumpFileStripMenuItem,
+			this.detachToolStripMenuItem,
             this.toolStripSeparator1,
             this.openProjectToolStripMenuItem,
             this.mergeWithProjectToolStripMenuItem,
@@ -1081,6 +1083,14 @@ namespace ReClassNET.Forms
 			this.attachToProcessToolStripMenuItem.Size = new System.Drawing.Size(195, 22);
 			this.attachToProcessToolStripMenuItem.Text = "Attach to Process...";
 			this.attachToProcessToolStripMenuItem.Click += new System.EventHandler(this.attachToProcessToolStripSplitButton_ButtonClick);
+			// 
+			// openDumpFileStripMenuItem
+			// 
+			this.openDumpFileStripMenuItem.Image = global::ReClassNET.Properties.Resources.B16x16_Magnifier;
+			this.openDumpFileStripMenuItem.Name = "openDumpFileStripMenuItem";
+			this.openDumpFileStripMenuItem.Size = new System.Drawing.Size(195, 22);
+			this.openDumpFileStripMenuItem.Text = "Open dump file...";
+			this.openDumpFileStripMenuItem.Click += new System.EventHandler(this.openDumpFileToolStripMenuItem_Click);
 			// 
 			// reattachToProcessToolStripMenuItem
 			// 
@@ -1412,6 +1422,7 @@ namespace ReClassNET.Forms
 		private System.Windows.Forms.MenuStrip mainMenuStrip;
 		private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem attachToProcessToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem openDumpFileStripMenuItem;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
 		private System.Windows.Forms.ToolStripMenuItem clearProjectToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem openProjectToolStripMenuItem;

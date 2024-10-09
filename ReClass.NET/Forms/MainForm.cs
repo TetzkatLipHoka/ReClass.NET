@@ -447,6 +447,21 @@ namespace ReClassNET.Forms
 				}
 			}
 		}
+		private void openDumpFileToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			try
+			{
+				var path = ShowOpenDumpFileDialog();
+				if (path != null)
+				{
+
+				}
+			}
+			catch (Exception ex)
+			{
+				Program.Logger.Log(ex);
+			}
+		}
 
 		private void attachToProcessToolStripSplitButton_DropDownClosed(object sender, EventArgs e)
 		{

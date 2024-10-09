@@ -207,6 +207,22 @@ namespace ReClassNET.Forms
 			return null;
 		}
 
+		public static string ShowOpenDumpFileDialog()
+		{
+			using var ofd = new OpenFileDialog
+			{
+				CheckFileExists = true,
+				Filter = $"Crash Dump Files |*.dmp;*.hdmp;*.mdmp;*.kdmp"
+			};
+
+			if (ofd.ShowDialog() == DialogResult.OK)
+			{
+				return ofd.FileName;
+			}
+
+			return null;
+		}
+
 		/// <summary>Loads the file as a new project.</summary>
 		/// <param name="path">Full pathname of the file.</param>
 		public void LoadProjectFromPath(string path)
