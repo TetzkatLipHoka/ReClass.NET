@@ -120,7 +120,6 @@ static bool GetData(PVOID pStartAddress, SIZE_T length, PBYTE bytes)
 
 	if (!SendCommond(command, result))
 	{
-		fprintf(stderr, "SendCommond failed\n");
 		return false;
 	}
 
