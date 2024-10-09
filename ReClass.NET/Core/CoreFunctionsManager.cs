@@ -1,8 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using ReClassNET.Debugger;
 using ReClassNET.Extensions;
@@ -126,6 +127,12 @@ namespace ReClassNET.Core
 		public IntPtr OpenRemoteProcess(IntPtr pid, ProcessAccess desiredAccess)
 		{
 			return currentFunctions.OpenRemoteProcess(pid, desiredAccess);
+		}
+
+		public bool OpenDumpFile(String dumpeFilePath)
+		{
+			IntPtr strPtr = Marshal.StringToHGlobalAnsi(dumpeFilePath);
+			return currentFunctions.OpenDumpFile(strPtr);
 		}
 
 		public bool IsProcessValid(IntPtr process)

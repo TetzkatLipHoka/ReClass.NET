@@ -14,6 +14,11 @@ enum class Platform
 
 Platform GetProcessPlatform(HANDLE process)
 {
+	if (g_IsDumpAnalysis)
+	{
+		return Platform::Unknown;
+	}
+
 	static USHORT processorArchitecture = PROCESSOR_ARCHITECTURE_UNKNOWN;
 	if (processorArchitecture == PROCESSOR_ARCHITECTURE_UNKNOWN)
 	{

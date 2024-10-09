@@ -5,6 +5,11 @@
 
 void RC_CallConv ControlRemoteProcess(RC_Pointer handle, ControlRemoteProcessAction action)
 {
+	if (g_IsDumpAnalysis)
+	{
+		return;
+	}
+
 	if (action == ControlRemoteProcessAction::Suspend || action == ControlRemoteProcessAction::Resume)
 	{
 		const auto processId = GetProcessId(handle);

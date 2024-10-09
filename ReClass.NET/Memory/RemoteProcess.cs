@@ -101,6 +101,11 @@ namespace ReClassNET.Memory
 			Close();
 		}
 
+		public void OpenDumpFile(String dumpFilePath)
+		{
+			coreFunctions.OpenDumpFile(dumpFilePath);
+		}
+
 		/// <summary>Opens the given process to gather informations from.</summary>
 		/// <param name="info">The process information.</param>
 		public void Open(ProcessInfo info)

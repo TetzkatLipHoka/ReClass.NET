@@ -439,11 +439,6 @@ namespace ReClassNET.Forms
 				if (pb.SelectedProcess != null)
 				{
 					AttachToProcess(pb.SelectedProcess);
-
-					if (pb.LoadSymbols)
-					{
-						LoadAllSymbolsForCurrentProcess();
-					}
 				}
 			}
 		}
@@ -454,7 +449,13 @@ namespace ReClassNET.Forms
 				var path = ShowOpenDumpFileDialog();
 				if (path != null)
 				{
+					using var pb = new ProcessBrowserForm(Program.Settings.LastProcess);
+					if (pb.SelectedProcess != null)
+					{
+						AttachToProcess(pb.SelectedProcess);
+					}
 
+					OpenDumpFile(path);
 				}
 			}
 			catch (Exception ex)

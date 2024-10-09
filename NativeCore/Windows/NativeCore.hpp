@@ -3,6 +3,12 @@
 #include "../ReClassNET_Plugin.hpp"
 #include "../Shared/Keys.hpp"
 
+extern HANDLE g_hCdbProcess;
+extern HANDLE g_hChildStd_IN_Wr;
+extern HANDLE g_hChildStd_OUT_Rd;
+extern HANDLE g_hChildStd_ERR_Rd;
+extern bool g_IsDumpAnalysis;
+
 void RC_CallConv EnumerateProcesses(EnumerateProcessCallback callbackProcess);
 void RC_CallConv EnumerateRemoteSectionsAndModules(RC_Pointer handle, EnumerateRemoteSectionsCallback callbackSection, EnumerateRemoteModulesCallback callbackModule);
 
@@ -24,3 +30,5 @@ bool RC_CallConv SetHardwareBreakpoint(RC_Pointer id, RC_Pointer address, Hardwa
 RC_Pointer RC_CallConv InitializeInput();
 bool RC_CallConv GetPressedKeys(RC_Pointer handle, Keys* state[], int* count);
 void RC_CallConv ReleaseInput(RC_Pointer handle);
+
+bool RC_CallConv OpenDumpFile(RC_Pointer dumpFilePath);

@@ -5,6 +5,11 @@
 
 bool RC_CallConv AttachDebuggerToProcess(RC_Pointer id)
 {
+	if (g_IsDumpAnalysis)
+	{
+		return false;
+	}
+
 	if (!DebugActiveProcess(static_cast<DWORD>(reinterpret_cast<size_t>(id))))
 	{
 		return false;
@@ -17,11 +22,21 @@ bool RC_CallConv AttachDebuggerToProcess(RC_Pointer id)
 
 void RC_CallConv DetachDebuggerFromProcess(RC_Pointer id)
 {
+	if (g_IsDumpAnalysis)
+	{
+		return;
+	}
+
 	DebugActiveProcessStop(static_cast<DWORD>(reinterpret_cast<size_t>(id)));
 }
 
 bool RC_CallConv AwaitDebugEvent(DebugEvent* evt, int timeoutInMilliseconds)
 {
+	if (g_IsDumpAnalysis)
+	{
+		return false;
+	}
+
 	DEBUG_EVENT _evt = { };
 	if (!WaitForDebugEvent(&_evt, timeoutInMilliseconds))
 	{
@@ -129,6 +144,11 @@ bool RC_CallConv AwaitDebugEvent(DebugEvent* evt, int timeoutInMilliseconds)
 
 void RC_CallConv HandleDebugEvent(DebugEvent* evt)
 {
+	if (g_IsDumpAnalysis)
+	{
+		return;
+	}
+
 	DWORD continueStatus = 0;
 	switch (evt->ContinueStatus)
 	{
@@ -145,6 +165,11 @@ void RC_CallConv HandleDebugEvent(DebugEvent* evt)
 
 bool RC_CallConv SetHardwareBreakpoint(RC_Pointer id, RC_Pointer address, HardwareBreakpointRegister reg, HardwareBreakpointTrigger type, HardwareBreakpointSize size, bool set)
 {
+	if (g_IsDumpAnalysis)
+	{
+		return false;
+	}
+
 	if (reg == HardwareBreakpointRegister::InvalidRegister)
 	{
 		return false;

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Runtime.InteropServices;
 using ReClassNET.Debugger;
 using ReClassNET.Extensions;
@@ -42,6 +42,9 @@ namespace ReClassNET.Core
 		[return: MarshalAs(UnmanagedType.I1)]
 		private delegate bool SetHardwareBreakpointDelegate(IntPtr id, IntPtr address, HardwareBreakpointRegister register, HardwareBreakpointTrigger trigger, HardwareBreakpointSize size, [param: MarshalAs(UnmanagedType.I1)] bool set);
 
+		[return: MarshalAs(UnmanagedType.I1)]
+		private delegate bool OpenDumpFileDelegate(IntPtr dumpFilePath);
+
 		private readonly EnumerateProcessesDelegate enumerateProcessesDelegate;
 		private readonly EnumerateRemoteSectionsAndModulesDelegate enumerateRemoteSectionsAndModulesDelegate;
 		private readonly OpenRemoteProcessDelegate openRemoteProcessDelegate;
@@ -55,6 +58,7 @@ namespace ReClassNET.Core
 		private readonly AwaitDebugEventDelegate awaitDebugEventDelegate;
 		private readonly HandleDebugEventDelegate handleDebugEventDelegate;
 		private readonly SetHardwareBreakpointDelegate setHardwareBreakpointDelegate;
+		private readonly OpenDumpFileDelegate openDumpFileDelegate;
 
 		#endregion
 
@@ -78,6 +82,7 @@ namespace ReClassNET.Core
 			awaitDebugEventDelegate = GetFunctionDelegate<AwaitDebugEventDelegate>(handle, "AwaitDebugEvent");
 			handleDebugEventDelegate = GetFunctionDelegate<HandleDebugEventDelegate>(handle, "HandleDebugEvent");
 			setHardwareBreakpointDelegate = GetFunctionDelegate<SetHardwareBreakpointDelegate>(handle, "SetHardwareBreakpoint");
+			openDumpFileDelegate = GetFunctionDelegate<OpenDumpFileDelegate>(handle, "OpenDumpFile");
 		}
 
 		protected static TDelegate GetFunctionDelegate<TDelegate>(IntPtr handle, string function)
@@ -153,6 +158,11 @@ namespace ReClassNET.Core
 		public bool SetHardwareBreakpoint(IntPtr id, IntPtr address, HardwareBreakpointRegister register, HardwareBreakpointTrigger trigger, HardwareBreakpointSize size, bool set)
 		{
 			return setHardwareBreakpointDelegate(id, address, register, trigger, size, set);
+		}
+
+		public bool OpenDumpFile(IntPtr dumpFilePath)
+		{
+			return openDumpFileDelegate(dumpFilePath);
 		}
 	}
 }

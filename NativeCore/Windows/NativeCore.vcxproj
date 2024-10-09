@@ -187,6 +187,7 @@
     <ClCompile Include="EnumerateRemoteSectionsAndModules.cpp" />
     <ClCompile Include="IsProcessValid.cpp" />
     <ClCompile Include="Input.cpp" />
+    <ClCompile Include="OpenDumpFile.cpp" />
     <ClCompile Include="OpenRemoteProcess.cpp" />
     <ClCompile Include="ReadRemoteMemory.cpp" />
     <ClCompile Include="WriteRemoteMemory.cpp" />

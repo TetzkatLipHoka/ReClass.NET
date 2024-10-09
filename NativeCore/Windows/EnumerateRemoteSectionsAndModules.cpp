@@ -9,6 +9,11 @@
 
 PPEB GetRemotePeb(const HANDLE process)
 {
+	if (g_IsDumpAnalysis)
+	{
+		return nullptr;
+	}
+
 	static auto* const ntdll = GetModuleHandle(TEXT("ntdll"));
 	if (!ntdll)
 	{
@@ -36,6 +41,11 @@ using InternalEnumerateRemoteModulesCallback = std::function<void(EnumerateRemot
 
 bool EnumerateRemoteModulesNative(const RC_Pointer process, const InternalEnumerateRemoteModulesCallback& callback)
 {
+	if (g_IsDumpAnalysis)
+	{
+		return false;
+	}
+
 	auto* const ppeb = GetRemotePeb(process);
 	if (ppeb == nullptr)
 	{
@@ -84,6 +94,11 @@ bool EnumerateRemoteModulesNative(const RC_Pointer process, const InternalEnumer
 
 bool EnumerateRemoteModulesWinapi(const RC_Pointer process, const InternalEnumerateRemoteModulesCallback& callback)
 {
+	if (g_IsDumpAnalysis)
+	{
+		return false;
+	}
+
 	auto* const handle = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE, GetProcessId(process));
 	if (handle == INVALID_HANDLE_VALUE)
 	{
@@ -112,6 +127,11 @@ bool EnumerateRemoteModulesWinapi(const RC_Pointer process, const InternalEnumer
 
 void RC_CallConv EnumerateRemoteSectionsAndModules(RC_Pointer process, EnumerateRemoteSectionsCallback callbackSection, EnumerateRemoteModulesCallback callbackModule)
 {
+	if (g_IsDumpAnalysis)
+	{
+		return;
+	}
+
 	if (callbackSection == nullptr && callbackModule == nullptr)
 	{
 		return;

@@ -4,6 +4,11 @@
 
 bool RC_CallConv IsProcessValid(RC_Pointer handle)
 {
+	if (g_IsDumpAnalysis)
+	{
+		return true;
+	}
+
 	if (handle == nullptr)
 	{
 		return false;

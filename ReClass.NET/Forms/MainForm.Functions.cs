@@ -71,6 +71,13 @@ namespace ReClassNET.Forms
 			Program.Settings.LastProcess = Program.RemoteProcess.UnderlayingProcess.Name;
 		}
 
+		public void OpenDumpFile(String dumpFilePath)
+		{
+			Contract.Requires(dumpFilePath != null);
+
+			Program.RemoteProcess.OpenDumpFile(dumpFilePath);
+		}
+
 		/// <summary>Sets the current project.</summary>
 		/// <param name="newProject">The new project.</param>
 		public void SetProject(ReClassNetProject newProject)

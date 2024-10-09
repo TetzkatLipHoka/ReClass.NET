@@ -61,6 +61,9 @@
     <ClCompile Include="..\Shared\DistormHelper.cpp">
       <Filter>Shared</Filter>
     </ClCompile>
+    <ClCompile Include="OpenDumpFile.cpp">
+      <Filter>Functions</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="exports.def" />
