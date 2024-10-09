@@ -33,6 +33,7 @@ static bool FinishCdb()
 
 void RC_CallConv CloseRemoteProcess(RC_Pointer handle)
 {
+	/*
 	if (g_IsDumpAnalysis)
 	{
 		FinishCdb();
@@ -46,4 +47,12 @@ void RC_CallConv CloseRemoteProcess(RC_Pointer handle)
 
 		CloseHandle(handle);
 	}
+	*/
+
+	if (handle == nullptr)
+	{
+		return;
+	}
+
+	CloseHandle(handle);
 }
