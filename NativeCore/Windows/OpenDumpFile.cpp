@@ -231,8 +231,47 @@ static bool InitCdb(std::wstring dump_path)
 	return true;
 }
 
+static bool FinishCdb()
+{
+	std::string command = "q\n";
+	if (!WriteFile(g_hChildStd_IN_Wr, command.data(), command.size(), NULL, NULL))
+	{
+		return false;
+	}
+
+	if (g_hChildStd_IN_Wr)
+	{
+		CloseHandle(g_hChildStd_IN_Wr);
+	}
+	if (g_hChildStd_OUT_Rd)
+	{
+		CloseHandle(g_hChildStd_OUT_Rd);
+	}
+	if (g_hChildStd_ERR_Rd)
+	{
+		CloseHandle(g_hChildStd_ERR_Rd);
+	}
+
+	if (g_hCdbProcess)
+	{
+		CloseHandle(g_hCdbProcess);
+	}
+
+	return true;
+}
+
 bool RC_CallConv OpenDumpFile(RC_Pointer dumpFilePath)
 {
+	if (g_IsDumpAnalysis)
+	{
+		if (!FinishCdb())
+		{
+			return false;
+		}
+
+		g_IsDumpAnalysis = false;
+	}
+
 	PCHAR tempStr = (PCHAR)dumpFilePath;
 	std::wstring wDumpFilePath = String2Wstring(tempStr);
 	if (!InitCdb(wDumpFilePath))
