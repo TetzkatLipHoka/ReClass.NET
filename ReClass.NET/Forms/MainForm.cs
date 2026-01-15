@@ -31,11 +31,14 @@ namespace ReClassNET.Forms
 {
 	public partial class MainForm : IconForm
 	{
+		private static MainForm instance;
+    
 		private readonly PluginManager pluginManager;
 		private readonly IconProvider iconProvider = new IconProvider();
 
 		private ReClassNetProject currentProject;
-		public ReClassNetProject CurrentProject => currentProject;
+		//public ReClassNetProject CurrentProject => currentProject;
+		public static ReClassNetProject CurrentProject => instance.currentProject;
 		public MemoryViewControl MemoryViewControl => memoryViewControl;
 		private ClassNode currentClassNode;
 
@@ -75,8 +78,12 @@ namespace ReClassNET.Forms
 
 		public MainForm()
 		{
+			Contract.Requires(instance == null);
+			Contract.Ensures(instance != null);
 			Contract.Ensures(pluginManager != null);
 			Contract.Ensures(currentProject != null);
+
+			instance = this;
 
 			InitializeComponent();
 			UpdateWindowTitle();
@@ -280,18 +287,18 @@ namespace ReClassNET.Forms
 
 		private void openProjectToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			try
-			{
+			/*try
+			{*/
 				var path = ShowOpenProjectFileDialog();
 				if (path != null)
 				{
 					LoadProjectFromPath(path);
-				}
+				}/*
 			}
 			catch (Exception ex)
 			{
 				Program.Logger.Log(ex);
-			}
+			}*/
 		}
 
 		private void mergeWithProjectToolStripMenuItem_Click(object sender, EventArgs e)
@@ -390,8 +397,9 @@ namespace ReClassNET.Forms
 
 			using var sfd = new SaveFileDialog
 			{
-				DefaultExt = ReClassNetFile.FileExtension,
-				Filter = $"{ReClassNetFile.FormatName} (*{ReClassNetFile.FileExtension})|*{ReClassNetFile.FileExtension}"
+				DefaultExt = ReClassNetFile.DefaultFileExtension,
+				Filter = $"{ReClassNetFile.FormatName} (*{ReClassNetFile.DefaultFileExtension})|*{ReClassNetFile.DefaultFileExtension}"
+						+ $"|{ReClassNetFile.AlternateFormatName} (*{ReClassNetFile.AlternateFileExtension})|*{ReClassNetFile.AlternateFileExtension}"
 			};
 
 			if (sfd.ShowDialog() == DialogResult.OK)
@@ -490,6 +498,11 @@ namespace ReClassNET.Forms
 		private void cleanUnusedClassesToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			currentProject.RemoveUnusedClasses();
+		}
+
+		private void generateCCodeToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			ShowCodeGeneratorForm(new CCodeGenerator());
 		}
 
 		private void generateCppCodeToolStripMenuItem_Click(object sender, EventArgs e)
@@ -890,7 +903,8 @@ namespace ReClassNET.Forms
 				{
 					switch (Path.GetExtension(files.First()))
 					{
-						case ReClassNetFile.FileExtension:
+						case ReClassNetFile.DefaultFileExtension:
+						case ReClassNetFile.AlternateFileExtension:
 						case ReClassQtFile.FileExtension:
 						case ReClassFile.FileExtension:
 							e.Effect = DragDropEffects.Copy;
@@ -930,6 +944,7 @@ namespace ReClassNET.Forms
 		private void classesView_ClassSelected(object sender, ClassNode node)
 		{
 			CurrentClassNode = node;
+			CurrentProject.CustomData.SetString("LastSelectedClass", node.Name);
 		}
 
 		private void memoryViewControl_KeyDown(object sender, KeyEventArgs args)

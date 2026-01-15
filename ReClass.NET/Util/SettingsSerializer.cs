@@ -42,6 +42,7 @@ namespace ReClassNET.Util
 					XElementSerializer.TryRead(general, nameof(settings.StayOnTop), e => settings.StayOnTop = XElementSerializer.ToBool(e));
 					XElementSerializer.TryRead(general, nameof(settings.RunAsAdmin), e => settings.RunAsAdmin = XElementSerializer.ToBool(e));
 					XElementSerializer.TryRead(general, nameof(settings.RandomizeWindowTitle), e => settings.RandomizeWindowTitle = XElementSerializer.ToBool(e));
+					XElementSerializer.TryRead(general, nameof(settings.HideWindowIcons), e => settings.HideWindowIcons = XElementSerializer.ToBool(e));
 					XElementSerializer.TryRead(general, nameof(settings.DarkMode), e => settings.DarkMode = (DarkModeForms.DarkModeCS.DisplayMode)int.Parse(XElementSerializer.ToString(e)));
 					XElementSerializer.TryRead(general, nameof(settings.ColorizeIcons), e => settings.ColorizeIcons = XElementSerializer.ToBool(e));
 					XElementSerializer.TryRead(general, nameof(settings.RoundedPanels), e => settings.RoundedPanels = XElementSerializer.ToBool(e));
@@ -167,6 +168,7 @@ namespace ReClassNET.Util
 						XElementSerializer.ToXml(nameof(settings.StayOnTop), settings.StayOnTop),
 						XElementSerializer.ToXml(nameof(settings.RunAsAdmin), settings.RunAsAdmin),
 						XElementSerializer.ToXml(nameof(settings.RandomizeWindowTitle), settings.RandomizeWindowTitle),
+            XElementSerializer.ToXml(nameof(settings.HideWindowIcons), settings.HideWindowIcons),
 						XElementSerializer.ToXml(nameof(settings.DarkMode), (int)settings.DarkMode),
 						XElementSerializer.ToXml(nameof(settings.ColorizeIcons), settings.ColorizeIcons),
 						XElementSerializer.ToXml(nameof(settings.RoundedPanels), settings.RoundedPanels),

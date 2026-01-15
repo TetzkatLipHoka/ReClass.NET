@@ -39,6 +39,22 @@ namespace ReClassNET.Nodes
 			}
 		}
 
+		public bool RemoveNodes(IEnumerable<BaseNode> nodeList)
+		{
+			Contract.Requires(nodeList != null);
+
+			var result = false;
+			foreach (var node in nodeList)
+			{
+				result = nodes.Remove(node);
+			}
+			if (result)
+			{
+				OnNodesUpdated();
+			}
+			return result;
+		}
+
 		public override void ClearSelection()
 		{
 			base.ClearSelection();

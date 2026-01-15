@@ -120,7 +120,7 @@ namespace ReClassNET.MemoryScanner
 		{
 			Contract.Ensures(Contract.Result<IList<Section>>() != null);
 
-			return process.Sections
+			IList<Section> res = process.Sections
 				.Where(s => !s.Protection.HasFlag(SectionProtection.Guard))
 				.Where(s => s.Start.IsInRange(Settings.StartAddress, Settings.StopAddress)
 							|| Settings.StartAddress.IsInRange(s.Start, s.End)
@@ -163,6 +163,19 @@ namespace ReClassNET.MemoryScanner
 					};
 				})
 				.ToList();
+
+			if (res.Count == 0)
+			{
+				Section section = new Section();
+
+				section.Start = Settings.StartAddress;
+				section.End = Settings.StopAddress;
+				section.Size = new IntPtr(section.End.ToInt64() - section.Start.ToInt64());
+
+				res.Add(section);
+			}
+
+			return res;
 		}
 
 		/// <summary>

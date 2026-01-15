@@ -73,6 +73,7 @@ namespace ReClassNET.Forms
 			this.filterNameTextBox.Size = new System.Drawing.Size(492, 20);
 			this.filterNameTextBox.TabIndex = 1;
 			this.filterNameTextBox.TextChanged += new System.EventHandler(this.filterNameTextBox_TextChanged);
+			this.filterNameTextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.filterNameTextBox_KeyDown);
 			// 
 			// cancelButton
 			// 

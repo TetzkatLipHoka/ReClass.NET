@@ -96,4 +96,13 @@
 			Name = name;
 		}
 	}
+  
+	public class TypeExpression : IExpression
+	{
+		public string Name { get; }
+		public TypeExpression(string name)
+		{
+			Name = name;
+		}
+	}
 }

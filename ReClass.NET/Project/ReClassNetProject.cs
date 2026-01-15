@@ -40,6 +40,8 @@ namespace ReClassNET.Project
 		/// List of data types to use while generating C++ code for nodes.
 		/// </summary>
 		public CppTypeMapping TypeMapping { get; } = new CppTypeMapping();
+    
+		public bool Loaded { get; internal set; }
 		
 		public ReClassNetProject()
 		{
@@ -110,7 +112,8 @@ namespace ReClassNET.Project
 
 		private void NodesChanged_Handler(BaseNode sender)
 		{
-			classes.ForEach(c => c.UpdateOffsets());
+			if (Loaded)
+				classes.ForEach(c => c.UpdateOffsets());
 		}
 
 		public void Clear()

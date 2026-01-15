@@ -1,14 +1,31 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.Contracts;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using ReClassNET.Extensions;
+using ReClassNET.Forms;
 using ReClassNET.Memory;
+using ReClassNET.Nodes;
 
 namespace ReClassNET.AddressParser
 {
 	public class DynamicCompiler : IExecutor
 	{
+		// TODO: Find a neater way to get the project context, which is only referenced in the UI currently.
+		public interface IProjectContext
+		{
+			IReadOnlyList<ClassNode> Classes { get; }
+		}
+
+		public class MainFormProjectContext : IProjectContext
+		{
+			public IReadOnlyList<ClassNode> Classes => MainForm.CurrentProject.Classes;
+		}
+
+		public static IProjectContext projectContext = new MainFormProjectContext();
+
 		public IntPtr Execute(IExpression expression, IProcessReader processReader)
 		{
 			Contract.Requires(expression != null);
@@ -97,6 +114,17 @@ namespace ReClassNET.AddressParser
 								Expression.MakeMemberAccess(moduleVariable, typeof(Memory.Module).GetProperty(nameof(Memory.Module.Start))!)
 							)
 						);
+					}
+				case TypeExpression typeExpression:
+					{
+						var classNode = projectContext.Classes.Where(classNode => classNode.Name == typeExpression.Name).FirstOrDefault();
+						var classNameConstant = Expression.Constant(classNode);
+						var resolveFn = typeof(ClassUtil).GetRuntimeMethod(
+							nameof(ClassUtil.ResolveClassAddress),
+							new[] { typeof(IProcessReader), typeof(ClassNode) }
+						);
+
+						return Expression.Call(null, resolveFn, processParameter, classNameConstant);
 					}
 				case ReadMemoryExpression readMemoryExpression:
 					{

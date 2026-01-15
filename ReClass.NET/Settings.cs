@@ -21,6 +21,8 @@ namespace ReClassNET
 
 		public bool RandomizeWindowTitle { get; set; } = false;
 
+		public bool HideWindowIcons { get; set; } = false;
+
 		public DarkModeForms.DarkModeCS.DisplayMode DarkMode { get; set; } = DarkModeForms.DarkModeCS.DisplayMode.SystemDefault;
 
 		public bool ColorizeIcons { get; set; } = false;

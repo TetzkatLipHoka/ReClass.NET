@@ -384,6 +384,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="CodeGenerator\CCodeGenerator.cs" />
     <Compile Include="CodeGenerator\CppCodeGenerator.cs" />
     <Compile Include="CodeGenerator\CSharpCodeGenerator.cs" />
     <Compile Include="CodeGenerator\ICodeGenerator.cs" />

@@ -8,6 +8,7 @@ using System.Xml.Linq;
 using ReClassNET.Logger;
 using ReClassNET.Nodes;
 using ReClassNET.Project;
+using static ReClassNET.AddressParser.DynamicCompiler;
 
 namespace ReClassNET.DataExchange.ReClass
 {
@@ -18,16 +19,23 @@ namespace ReClassNET.DataExchange.ReClass
 		{
 			using var fs = new FileStream(filePath, FileMode.Create);
 
-			Save(fs, logger);
+			var ext = Path.GetExtension(filePath);
+			if(ext == DefaultFileExtension)
+			{
+				using var archive = new ZipArchive(fs, ZipArchiveMode.Create);
+
+				var dataEntry = archive.CreateEntry(DataFileName);
+				using var entryStream = dataEntry.Open();
+				Save(entryStream, logger);
+			} 
+			else if(ext == AlternateFileExtension)
+			{
+				Save(fs, logger);
+			}
 		}
 
 		public void Save(Stream output, ILogger logger)
 		{
-			using var archive = new ZipArchive(output, ZipArchiveMode.Create);
-
-			var dataEntry = archive.CreateEntry(DataFileName);
-			using var entryStream = dataEntry.Open();
-
 			var document = new XDocument(
 				new XComment($"{Constants.ApplicationName} {Constants.ApplicationVersion} by {Constants.Author}"),
 				new XComment($"Website: {Constants.HomepageUrl}"),
@@ -46,7 +54,7 @@ namespace ReClassNET.DataExchange.ReClass
 				foreach (var element in GetDeletedClassesElements(logger).Element(XmlRootElement).Element(XmlClassesElement).Elements())
 					document.Element(XmlRootElement).Element(XmlClassesElement).Add(element);
 			}
-			document.Save(entryStream);
+			document.Save(output);
 		}
 		private static XDocument GetDeletedClassesElements(ILogger logger)
 		{
@@ -138,8 +146,9 @@ namespace ReClassNET.DataExchange.ReClass
 				{
 					element.SetAttributeValue(XmlReferenceAttribute, ((ClassNode)classWrapperNode.InnerNode).Uuid);
 					//In case if class was mistakenly deleted from project, add it
-					if (!Program.MainForm.CurrentProject.ContainsClass(((ClassNode)classWrapperNode.InnerNode).Uuid))
-						DeletedReferencedClasses.Add(classWrapperNode.InnerNode as ClassNode);
+					//if (!Program.MainForm.CurrentProject.ContainsClass(((ClassNode)classWrapperNode.InnerNode).Uuid))
+					if (!ReClassNET.AddressParser.DynamicCompiler.projectContext.Classes.Any(c => c.Uuid.Equals(((ClassNode)classWrapperNode.InnerNode).Uuid)))
+					    DeletedReferencedClasses.Add(classWrapperNode.InnerNode as ClassNode);
 
 				}
 				else if (wrapperNode.InnerNode != null)

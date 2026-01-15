@@ -123,7 +123,28 @@ namespace ReClassNET.Forms
 			projectView.Clear();
 			projectView.AddEnums(currentProject.Enums);
 			projectView.AddClasses(currentProject.Classes);
-			CurrentClassNode = currentProject.Classes.FirstOrDefault();
+
+			var lastSelectedClass = currentProject.CustomData.GetString("LastSelectedClass");
+			if (!string.IsNullOrEmpty(lastSelectedClass))
+			{
+				var index = currentProject.Classes.FindIndex((c) => c.Name == lastSelectedClass);
+				if (index != -1)
+				{
+					CurrentClassNode = currentProject.Classes[index];
+				}
+				else
+				{
+					CurrentClassNode = currentProject.Classes.FirstOrDefault();
+				}
+			}
+			else
+			{
+				CurrentClassNode = currentProject.Classes.FirstOrDefault();
+			}
+
+			currentProject.Loaded = true;
+			foreach (var c in currentProject.Classes)
+				c.UpdateOffsets();
 		}
 
 		/// <summary>Opens the <see cref="InputBytesForm"/> and calls <paramref name="callback"/> with the result.</summary>
@@ -207,8 +228,9 @@ namespace ReClassNET.Forms
 			using var ofd = new OpenFileDialog
 			{
 				CheckFileExists = true,
-				Filter = $"All ReClass Types |*{ReClassNetFile.FileExtension};*{ReClassFile.FileExtension};*{ReClassQtFile.FileExtension}"
-				         + $"|{ReClassNetFile.FormatName} (*{ReClassNetFile.FileExtension})|*{ReClassNetFile.FileExtension}"
+				Filter = $"All ReClass Types |*{ReClassNetFile.DefaultFileExtension};*{ReClassNetFile.AlternateFileExtension};*{ReClassFile.FileExtension};*{ReClassQtFile.FileExtension}"
+				         + $"|{ReClassNetFile.FormatName} (*{ReClassNetFile.DefaultFileExtension})|*{ReClassNetFile.DefaultFileExtension}"
+				         + $"|{ReClassNetFile.AlternateFormatName} (*{ReClassNetFile.AlternateFileExtension})|*{ReClassNetFile.AlternateFileExtension}"
 				         + $"|{ReClassFile.FormatName} (*{ReClassFile.FileExtension})|*{ReClassFile.FileExtension}"
 				         + $"|{ReClassQtFile.FormatName} (*{ReClassQtFile.FileExtension})|*{ReClassQtFile.FileExtension}"
 			};
@@ -260,7 +282,9 @@ namespace ReClassNET.Forms
 			LoadProjectFromPath(path, ref project);
 
 			// If the file is a ReClass.NET file remember the path.
-			if (Path.GetExtension(path) == ReClassNetFile.FileExtension)
+			var ext = Path.GetExtension(path);
+			if (ext == ReClassNetFile.DefaultFileExtension
+				|| ext == ReClassNetFile.AlternateFileExtension)
 			{
 				project.Path = path;
 			}
@@ -284,7 +308,8 @@ namespace ReClassNET.Forms
 			IReClassImport import;
 			switch (Path.GetExtension(path)?.ToLower())
 			{
-				case ReClassNetFile.FileExtension:
+				case ReClassNetFile.DefaultFileExtension:
+				case ReClassNetFile.AlternateFileExtension:
 					import = new ReClassNetFile(project);
 					break;
 				case ReClassQtFile.FileExtension:
@@ -564,11 +589,22 @@ namespace ReClassNET.Forms
 
 		private void RemoveSelectedNodes()
 		{
+      /*      
 			memoryViewControl.GetSelectedNodes()
 				.WhereNot(h => h.Node is ClassNode)
 				.ForEach(h => h.Node.GetParentContainer().RemoveNode(h.Node));
 
 			ClearSelection();
+      */
+			var ng = memoryViewControl.GetSelectedNodes()
+				.WhereNot(h => h.Node is ClassNode || h.Node.GetParentContainer() == null).GroupBy(k => k.Node.GetParentContainer());
+			foreach (var group in ng)
+			{
+				if (group.Key is { } bcn)
+				{
+					bcn.RemoveNodes(group.Select(h => h.Node));
+				}
+			}
 		}
 
 		private void HideSelectedNodes()

@@ -51,6 +51,14 @@ This is a port of ReClass to the .NET platform with lots of additional features.
   - Import/Export of Editor Themes
 - Open MiniDumps
 - Basic Networking-functionality
+- Add arrow key selection in Class Selection window
+- Show comments on Hex8Node
+- Show comments on Hex16Node  
+- HideWindowIcons
+- Allow loading of uncompressed rcnet file to allow version control tools to work nicely w/ ReClass.NET files
+- allow naming unions
+- add support for generating C code
+- Added **{ClassName}** support to the address field
 
 ## Plugins
 - [Sample Plugins](https://github.com/ReClassNET/ReClass.NET-SamplePlugin)
@@ -60,6 +68,8 @@ This is a port of ReClass to the .NET platform with lots of additional features.
 - [Handle Abuser Plugin](https://github.com/ReClassNET/ReClass.NET-HandleAbuser)
 - [Unreal Plugin](https://github.com/TetzkatLipHoka/ReClass.NET-UnrealPlugin) (by [DrP3pp3r](https://github.com/DrP3pp3r))
 - [DriverReader](https://github.com/niemand-sec/ReClass.NET-DriverReader) (by [Niemand](https://github.com/niemand-sec))
+- [PciLeech](https://github.com/mgoodings/ReClass.NET-PciLeechPlugin) (by [Dylan Goods](https://github.com/mgoodings/))
+- [ReClass-DMA](https://github.com/dexus1337/ReClass-DMA) (by [dexus](https://github.com/dexus1337/))
 
 - [Playstation 4: Frame4 Plugin](https://github.com/TetzkatLipHoka/ReClass.Net-Frame4Plugin)
 - [Playstation 4: PS4Debug Plugin](https://github.com/TetzkatLipHoka/ReClass.Net-PS4DebugPlugin)
@@ -77,8 +87,10 @@ Just download the [latest version](https://github.com/TetzkatLipHoka/ReClass.NET
 - The node window can be controlled with the keyboard too. Arrow keys can select other keys, combined with the shift key the nodes get selected. The menu key opens the context menu which itself can be controlled with the keyboard.
 - The memory address field of a class can contain a real formula not just a fixed address.  
   
-  **\<Program.exe> + 0x123** will use the base address of Program.exe and add 0x123 to it.  
-  **[0x4012ABDE]** will read the integer (4 byte on x86 / 8 byte on x64) from the address 0x4012ABDE and use this value as class address.  
+  **\<Program.exe> + 0x123** will use the base address of Program.exe and add 0x123 to it.
+  **{ClassName}** will search for a class with this name in your project and resolve it's address.
+  **[0x4012ABDE]** will read the integer (4 byte on x86 / 8 byte on x64) from the address 0x4012ABDE and use this value as class address.
+  **[{ClassName} + 0x08]** will resolve the address of the ClassName in your project, add 0x08 and then read the value from this address (Useful to follow pointers from global objects) 
   **[\<Program.exe> + 0xDE] - AB** will use the base address of Program.exe, add 0xDE to it, read the value from this address and finally sub 0xAB from it.  
   **[\<Program.exe> + offset + [\<Program.exe> + offset2]]** Nested operations are supported too.  
   
@@ -178,3 +190,9 @@ Settings
 - [user23333](https://github.com/user23333/)
 - [Pinwhell](https://github.com/pinwhell/)
 - [Nu](https://github.com/Autoplay1999/)
+- [Haselnussbomber](https://github.com/Haselnussbomber/)
+- [atrexus](https://github.com/atrexus/)
+- [dexus](https://github.com/dexus1337/)
+- [dschu012](https://github.com/dschu012/)
+- [Ross Weir](https://github.com/ross-weir/)
+- [piepieonline](https://github.com/piepieonline/)

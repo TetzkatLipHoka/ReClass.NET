@@ -1,6 +1,8 @@
-﻿using System;
+using System;
 using System.Diagnostics.Contracts;
+using System.Linq;
 using ReClassNET.Extensions;
+using ReClassNET.Forms;
 using ReClassNET.Memory;
 
 namespace ReClassNET.AddressParser
@@ -24,6 +26,16 @@ namespace ReClassNET.AddressParser
 					if (module != null)
 					{
 						return module.Start;
+					}
+
+					return IntPtr.Zero;
+				}
+				case TypeExpression typeExpression:
+				{
+					var classNode = MainForm.CurrentProject.Classes.Where(classNode => classNode.Name == typeExpression.Name).FirstOrDefault();
+					if (classNode != null)
+					{
+						return (IntPtr)classNode.Offset;
 					}
 
 					return IntPtr.Zero;

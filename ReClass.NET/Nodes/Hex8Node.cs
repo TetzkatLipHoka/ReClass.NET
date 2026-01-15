@@ -1,5 +1,6 @@
 using System.Drawing;
 using ReClassNET.Controls;
+using ReClassNET.Memory;
 using ReClassNET.UI;
 
 namespace ReClassNET.Nodes
@@ -16,9 +17,12 @@ namespace ReClassNET.Nodes
 
 		public override string GetToolTipText(HotSpot spot)
 		{
+      /*
 			var b = spot.Memory.ReadUInt8(Offset);
-
 			return $"Int8: {(int)b}\nUInt8: 0x{b:X02}";
+      */      
+			var value = ReadFromBuffer(spot.Memory, Offset);
+			return $"Int8: {value.SByteValue}\nUInt8: 0x{value.ByteValue:X02}";
 		}
 
 		public override Size Draw(DrawContext context, int x, int y)
@@ -30,5 +34,32 @@ namespace ReClassNET.Nodes
 		{
 			Update(spot, 1);
 		}
+    
+		protected override int AddComment(DrawContext context, int x, int y)
+		{
+			x = base.AddComment(context, x, y);
+
+			var value = ReadFromBuffer(context.Memory, Offset);
+
+			if (context.Settings.ShowCommentInteger)
+			{
+				if (value.ByteValue == 0)
+				{
+					x = AddText(context, x, y, context.Settings.ValueColor, HotSpot.ReadOnlyId, "0") + context.Font.Width;
+				}
+				else
+				{
+					x = AddText(context, x, y, context.Settings.ValueColor, HotSpot.ReadOnlyId, value.SByteValue.ToString()) + context.Font.Width;
+					x = AddText(context, x, y, context.Settings.ValueColor, HotSpot.ReadOnlyId, $"0x{value.ByteValue:X}") + context.Font.Width;
+				}
+			}
+
+			return x;
+		}
+
+		private static UInt8Data ReadFromBuffer(MemoryBuffer memory, int offset) => new UInt8Data
+		{
+			ByteValue = memory.ReadUInt8(offset)
+		};
 	}
 }

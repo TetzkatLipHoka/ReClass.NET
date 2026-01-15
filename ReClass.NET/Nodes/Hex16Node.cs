@@ -17,7 +17,8 @@ namespace ReClassNET.Nodes
 
 		public override string GetToolTipText(HotSpot spot)
 		{
-			var value = new UInt16Data { ShortValue = spot.Memory.ReadInt16(Offset) };
+			//var value = new UInt16Data { ShortValue = spot.Memory.ReadInt16(Offset) };
+			var value = ReadFromBuffer(spot.Memory, Offset);
 
 			return $"Int16: {value.ShortValue}\nUInt16: 0x{value.UShortValue:X04}";
 		}
@@ -31,5 +32,32 @@ namespace ReClassNET.Nodes
 		{
 			Update(spot, 2);
 		}
+    
+	protected override int AddComment(DrawContext context, int x, int y)
+		{
+			x = base.AddComment(context, x, y);
+
+			var value = ReadFromBuffer(context.Memory, Offset);
+
+			if (context.Settings.ShowCommentInteger)
+			{ 
+				if (value.ShortValue == 0)
+				{
+					x = AddText(context, x, y, context.Settings.ValueColor, HotSpot.ReadOnlyId, "0") + context.Font.Width;
+				}
+				else
+				{
+					x = AddText(context, x, y, context.Settings.ValueColor, HotSpot.ReadOnlyId, value.ShortValue.ToString()) + context.Font.Width;
+					x = AddText(context, x, y, context.Settings.ValueColor, HotSpot.ReadOnlyId, $"0x{value.UShortValue:X}") + context.Font.Width;
+				}
+			}
+
+			return x;
+		}
+
+		private static UInt16Data ReadFromBuffer(MemoryBuffer memory, int offset) => new UInt16Data
+		{
+			ShortValue = memory.ReadInt16(offset)
+		};
 	}
 }

@@ -13,6 +13,7 @@
 		CloseBrackets,
 		Comma,
 		Number,
-		Identifier
+		Identifier,
+		TypeIdentifier
 	}
 }

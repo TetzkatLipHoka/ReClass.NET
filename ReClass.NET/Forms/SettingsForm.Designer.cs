@@ -119,6 +119,7 @@ namespace ReClassNET.Forms
 		private System.Windows.Forms.Button createAssociationButton;
 		private System.Windows.Forms.Label associationInfoLabel;
 		private System.Windows.Forms.CheckBox randomizeWindowTitleCheckBox;
+		private System.Windows.Forms.CheckBox hideWindowIconsCheckBox;
 		private System.Windows.Forms.CheckBox runAsAdminCheckBox;
 		private System.Windows.Forms.Label nuintSettingsLabel;
 		private System.Windows.Forms.TextBox nuintTypeTextBox;
@@ -161,6 +162,7 @@ namespace ReClassNET.Forms
             this.cppGeneratorShowOffsetCheckBox = new System.Windows.Forms.CheckBox();
             this.cppGeneratorShowPaddingCheckBox = new System.Windows.Forms.CheckBox();
             this.randomizeWindowTitleCheckBox = new System.Windows.Forms.CheckBox();
+            this.hideWindowIconsCheckBox = new System.Windows.Forms.CheckBox();
             this.fileAssociationGroupBox = new System.Windows.Forms.GroupBox();
             this.removeAssociationButton = new System.Windows.Forms.Button();
             this.createAssociationButton = new System.Windows.Forms.Button();
@@ -383,6 +385,16 @@ namespace ReClassNET.Forms
             this.randomizeWindowTitleCheckBox.Text = "Randomize window title";
             this.randomizeWindowTitleCheckBox.UseVisualStyleBackColor = true;
             // 
+            // hideWindowIconsCheckBox
+            // 
+            this.hideWindowIconsCheckBox.AutoSize = true;
+            this.hideWindowIconsCheckBox.Location = new System.Drawing.Point(144, 19);
+            this.hideWindowIconsCheckBox.Name = "hideWindowIconsCheckBox";
+            this.hideWindowIconsCheckBox.Size = new System.Drawing.Size(115, 17);
+            this.hideWindowIconsCheckBox.TabIndex = 6;
+            this.hideWindowIconsCheckBox.Text = "Hide window icons";
+            this.hideWindowIconsCheckBox.UseVisualStyleBackColor = true;
+            // 
             // fileAssociationGroupBox
             // 
             this.fileAssociationGroupBox.Controls.Add(this.removeAssociationButton);
@@ -527,6 +539,7 @@ namespace ReClassNET.Forms
             this.displayGroupBox.Controls.Add(this.colorizeIconsCheckBox);
             this.displayGroupBox.Controls.Add(this.roundedPanelsCheckBox);
             this.displayGroupBox.Controls.Add(this.enhancedCaretCheckBox);
+            this.displayGroupBox.Controls.Add(this.hideWindowIconsCheckBox);
             this.displayGroupBox.Controls.Add(this.highlightChangedValuesCheckBox);
             this.displayGroupBox.Controls.Add(this.showTextCheckBox);
             this.displayGroupBox.Controls.Add(this.showNodeOffsetCheckBox);

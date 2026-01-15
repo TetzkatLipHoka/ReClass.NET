@@ -39,6 +39,21 @@ namespace ReClassNET.Forms
 				SendMessage(Handle, WM_SETICON, (IntPtr)1, Icon.Handle);
 			}
 		}
+   
+		public IconForm()
+		{
+			if (!DesignMode && Program.Settings != null)
+			{
+				if (Program.Settings.HideWindowIcons)
+				{
+					ShowIcon = false;
+				}
+				else
+				{
+					ShowIcon = true;
+				}
+			}
+		}
 
 		[DllImport("user32.dll", CharSet = CharSet.Auto)]
 		private static extern IntPtr SendMessage(IntPtr hWnd, int msg, IntPtr wParam, IntPtr lParam);

@@ -461,6 +461,7 @@ namespace ReClassNET.Forms
 			SetBinding(showPluginInfoCheckBox, nameof(CheckBox.Checked), settings, nameof(Settings.ShowCommentPluginInfo));
 			SetBinding(runAsAdminCheckBox, nameof(CheckBox.Checked), settings, nameof(Settings.RunAsAdmin));
 			SetBinding(randomizeWindowTitleCheckBox, nameof(CheckBox.Checked), settings, nameof(Settings.RandomizeWindowTitle));
+			SetBinding(hideWindowIconsCheckBox, nameof(CheckBox.Checked), settings, nameof(Settings.HideWindowIcons));
 			SetBinding(colorizeIconsCheckBox, nameof(CheckBox.Checked), settings, nameof(Settings.ColorizeIcons));
 			SetBinding(roundedPanelsCheckBox, nameof(CheckBox.Checked), settings, nameof(Settings.RoundedPanels));
 			SetBinding(enhancedCaretCheckBox, nameof(CheckBox.Checked), settings, nameof(Settings.EnhancedCaret));
@@ -487,6 +488,14 @@ namespace ReClassNET.Forms
 					{
 						darkModeForm.UpdateDarkMode();
 					}
+				}
+			};
+
+			hideWindowIconsCheckBox.CheckedChanged += (_, _2) =>
+			{
+				foreach (Form form in Application.OpenForms)
+				{
+					form.ShowIcon = !hideWindowIconsCheckBox.Checked;
 				}
 			};
 		}
