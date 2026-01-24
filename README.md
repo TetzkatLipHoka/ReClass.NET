@@ -71,6 +71,7 @@ This is a port of ReClass to the .NET platform with lots of additional features.
 - [PciLeech](https://github.com/mgoodings/ReClass.NET-PciLeechPlugin) (by [Dylan Goods](https://github.com/mgoodings/))
 - [ReClass-DMA](https://github.com/dexus1337/ReClass-DMA) (by [dexus](https://github.com/dexus1337/))
 
+- [Playstation 3: TMAPI Plugin](https://github.com/Prefixmodz/ReClass.NET-PS3)
 - [Playstation 4: Frame4 Plugin](https://github.com/TetzkatLipHoka/ReClass.Net-Frame4Plugin)
 - [Playstation 4: PS4Debug Plugin](https://github.com/TetzkatLipHoka/ReClass.Net-PS4DebugPlugin)
 
