@@ -515,6 +515,11 @@ namespace ReClassNET.Forms
 			ShowCodeGeneratorForm(new CSharpCodeGenerator());
 		}
 
+		private void generateRustCodeToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			ShowCodeGeneratorForm(new RustCodeGenerator());
+		}
+
 		private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			using var af = new AboutForm();

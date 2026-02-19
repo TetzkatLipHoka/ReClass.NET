@@ -38,7 +38,7 @@ namespace ReClassNET.Forms
 			{
 				new CodeColorizer().Colorize(
 					code,
-					generator.Language == Language.Cpp ? Languages.Cpp : Languages.CSharp,
+					generator.Language == Language.CSharp ? Languages.CSharp : Languages.Cpp,
 					new RtfFormatter(),
 					StyleSheets.Default,
 					writer
