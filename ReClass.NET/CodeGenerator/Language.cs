@@ -2,8 +2,9 @@
 {
 	public enum Language
 	{
-    C,
+		C,
 		Cpp,
-		CSharp
+		CSharp,
+		Rust
 	}
 }
