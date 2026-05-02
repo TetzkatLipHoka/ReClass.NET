@@ -31,7 +31,7 @@ namespace ReClassNET.Native
 		private const uint SHGFI_LARGEICON = 0x0;
 		private const uint SHGFI_SMALLICON = 0x1;
 
-		[StructLayout(LayoutKind.Sequential)]
+		[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
 		private struct SHFILEINFO
 		{
 			public IntPtr hIcon;
@@ -58,11 +58,15 @@ namespace ReClassNET.Native
 			public uint Attributes;
 		}
 
-		[DllImport("shell32.dll")]
+		[DllImport("shell32.dll", CharSet = CharSet.Unicode)]
 		private static extern IntPtr SHGetFileInfo(string pszPath, int dwFileAttributes, ref SHFILEINFO psfi, int cbSizeFileInfo, uint uFlags);
 
 		[DllImport("user32.dll", ExactSpelling = true)]
 		private static extern int DestroyIcon(IntPtr hIcon);
+
+		[DllImport("advapi32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+		[return: MarshalAs(UnmanagedType.Bool)]
+		private static extern bool LookupPrivilegeValue(string lpSystemName, string lpName, out LUID lpLuid);
 
 		[DllImport("advapi32.dll", ExactSpelling = true)]
 		private static extern bool OpenProcessToken(IntPtr ProcessHandle, TokenAccessLevels DesiredAccess, out IntPtr TokenHandle);
@@ -70,7 +74,7 @@ namespace ReClassNET.Native
 		[DllImport("advapi32.dll", ExactSpelling = true)]
 		private static extern bool AdjustTokenPrivileges(IntPtr TokenHandle, [MarshalAs(UnmanagedType.Bool)]bool DisableAllPrivileges, ref TOKEN_PRIVILEGES NewState, uint Zero, IntPtr Null1, IntPtr Null2);
 
-		[DllImport("dbghelp.dll", CharSet = CharSet.Unicode)]
+		[DllImport("dbghelp.dll", EntryPoint = "UnDecorateSymbolNameW", CharSet = CharSet.Unicode)]
 		private static extern int UnDecorateSymbolName(string DecoratedName, StringBuilder UnDecoratedName, int UndecoratedLength, int Flags);
 
 		[DllImport("user32.dll")]
@@ -132,18 +136,17 @@ namespace ReClassNET.Native
 		{
 			if (OpenProcessToken(System.Diagnostics.Process.GetCurrentProcess().Handle, TokenAccessLevels.AllAccess, out var token))
 			{
-				var privileges = new TOKEN_PRIVILEGES
+				if (LookupPrivilegeValue(null, "SeDebugPrivilege", out var luid))
 				{
-					PrivilegeCount = 1,
-					Luid =
+					var privileges = new TOKEN_PRIVILEGES
 					{
-						LowPart = 0x14,
-						HighPart = 0
-					},
-					Attributes = 2
-				};
+						PrivilegeCount = 1,
+						Luid = luid,
+						Attributes = 2 // SE_PRIVILEGE_ENABLED
+					};
 
-				AdjustTokenPrivileges(token, false, ref privileges, 0, IntPtr.Zero, IntPtr.Zero);
+					AdjustTokenPrivileges(token, false, ref privileges, 0, IntPtr.Zero, IntPtr.Zero);
+				}
 
 				CloseHandle(token);
 			}
@@ -151,7 +154,7 @@ namespace ReClassNET.Native
 
 		public string UndecorateSymbolName(string name)
 		{
-			var sb = new StringBuilder(255);
+			var sb = new StringBuilder(1024);
 			if (UnDecorateSymbolName(name, sb, sb.Capacity, /*UNDNAME_NAME_ONLY*/0x1000) != 0)
 			{
 				return sb.ToString();

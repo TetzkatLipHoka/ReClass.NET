@@ -201,7 +201,7 @@ namespace ReClassNET.Plugins
 
 			if (customNodeTypes.NodeTypes == null || customNodeTypes.Serializer == null || customNodeTypes.CodeGenerator == null)
 			{
-				throw new ArgumentException(); // TODO
+				throw new ArgumentException($"The plugin '{pluginInfo.Name}' did not provide all required custom node type information.");
 			}
 
 			foreach (var nodeType in customNodeTypes.NodeTypes)

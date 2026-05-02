@@ -104,7 +104,7 @@ namespace ReClassNET.MemoryScanner
 				case ScanValueType.String:
 				case ScanValueType.Regex:
 					var strResult = (StringScanResult)result;
-					ValueLength = strResult.Value.Length;
+					ValueLength = strResult.ValueSize;
 					Encoding = strResult.Encoding;
 					ValueStr = FormatValue(strResult.Value);
 					break;
@@ -179,7 +179,7 @@ namespace ReClassNET.MemoryScanner
 					break;
 				case ScanValueType.String:
 				case ScanValueType.Regex:
-					buffer = new byte[ValueLength * Encoding.GuessByteCountPerChar()];
+					buffer = new byte[ValueLength];
 					break;
 				default:
 					throw new InvalidOperationException();

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
+using System.Text;
 using ReClassNET.Extensions;
 using ReClassNET.Nodes;
 
@@ -52,16 +53,23 @@ namespace ReClassNET.Memory
 			};
 
 			var raw = memory.ReadBytes(offset, node.MemorySize);
-			if (raw.InterpretAsSingleByteCharacter().IsLikelyPrintableData())
+
+			// Check for UTF8 first.
+			if (Encoding.UTF8.GetChars(raw).IsLikelyPrintableData())
 			{
 				guessedNode = new Utf8TextNode();
-
 				return true;
 			}
-			if (raw.InterpretAsDoubleByteCharacter().IsLikelyPrintableData())
+			// Then try UTF16.
+			if (Encoding.Unicode.GetChars(raw).IsLikelyPrintableData())
 			{
 				guessedNode = new Utf16TextNode();
-
+				return true;
+			}
+			// Finally try single byte.
+			if (raw.InterpretAsSingleByteCharacter(Program.Settings.RawDataEncoding).IsLikelyPrintableData())
+			{
+				guessedNode = new DefaultTextNode();
 				return true;
 			}
 
@@ -152,17 +160,24 @@ namespace ReClassNET.Memory
 				}
 
 				// Check if it is a string.
-				var data = process.ReadRemoteMemory(address, IntPtr.Size * 2);
-				if (data.Take(IntPtr.Size).InterpretAsSingleByteCharacter().IsLikelyPrintableData())
+				var data = process.ReadRemoteMemory(address, 64);
+
+				// Check for UTF8 first.
+				if (Encoding.UTF8.GetChars(data).IsLikelyPrintableData())
 				{
 					node = new Utf8TextPtrNode();
-
 					return true;
 				}
-				if (data.InterpretAsDoubleByteCharacter().IsLikelyPrintableData())
+				// Then try UTF16.
+				if (Encoding.Unicode.GetChars(data).IsLikelyPrintableData())
 				{
 					node = new Utf16TextPtrNode();
-
+					return true;
+				}
+				// Finally try single byte.
+				if (data.Take(IntPtr.Size).InterpretAsSingleByteCharacter(Program.Settings.RawDataEncoding).IsLikelyPrintableData())
+				{
+					node = new DefaultTextPtrNode();
 					return true;
 				}
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.Contracts;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace ReClassNET.Extensions
@@ -13,15 +14,32 @@ namespace ReClassNET.Extensions
 		[DebuggerStepThrough]
 		public static bool IsPrintable(this char c)
 		{
-			return (' ' <= c && c <= '~' || '\xA1' <= c && c <= '\xFF')  && c != '\xFFFD' /* Unicode REPLACEMENT CHARACTER � */;
+			if (c == '\xFFFD') // Unicode REPLACEMENT CHARACTER
+			{
+				return false;
+			}
+			if (char.IsControl(c))
+			{
+				// In many 8-bit encodings characters in the range 0x80 - 0x9F are printable.
+				// While they are control characters in Unicode, we allow them here to support these encodings.
+				return (c >= 0x80 && c <= 0x9F) || c == '\n' || c == '\r' || c == '\t';
+			}
+			return true;
 		}
 
 		[DebuggerStepThrough]
 		public static IEnumerable<char> InterpretAsSingleByteCharacter(this IEnumerable<byte> source)
 		{
-			Contract.Requires(source != null);
+			return InterpretAsSingleByteCharacter(source, Encoding.Default);
+		}
 
-			return source.Select(b => (char)b);
+		[DebuggerStepThrough]
+		public static IEnumerable<char> InterpretAsSingleByteCharacter(this IEnumerable<byte> source, Encoding encoding)
+		{
+			Contract.Requires(source != null);
+			Contract.Requires(encoding != null);
+
+			return encoding.GetChars(source.ToArray());
 		}
 
 		[DebuggerStepThrough]
@@ -29,10 +47,31 @@ namespace ReClassNET.Extensions
 		{
 			Contract.Requires(source != null);
 
-			var bytes = source.ToArray();
-			var chars = new char[bytes.Length / 2];
-			Buffer.BlockCopy(bytes, 0, chars, 0, bytes.Length);
-			return chars;
+			return Encoding.Unicode.GetChars(source.ToArray());
+		}
+
+		[Pure]
+		[DebuggerStepThrough]
+		public static bool IsStrictlyPrintable(this char c)
+		{
+			if (c == '\xFFFD')
+			{
+				return false;
+			}
+			if (c == '\n' || c == '\r' || c == '\t')
+			{
+				return true;
+			}
+			if (char.IsControl(c))
+			{
+				return false;
+			}
+
+			// We restrict the detection to common scripts and symbols to avoid false positives with random data.
+			// Latin, Cyrillic, Greek, etc. are usually in the lower Unicode ranges.
+			// Symbols, Box Drawing, Block Elements are in 0x2000 - 0x2BFF.
+			// Private Use Area (E000 - F8FF) is common for custom font icons in games.
+			return c < 0x3000 || (c >= 0x4E00 && c <= 0x9FFF) || (c >= 0xE000 && c <= 0xF8FF) || char.IsSurrogate(c);
 		}
 
 		[DebuggerStepThrough]
@@ -40,7 +79,7 @@ namespace ReClassNET.Extensions
 		{
 			Contract.Requires(source != null);
 
-			return CalculatePrintableDataThreshold(source) >= 1.0f;
+			return CalculatePrintableDataThreshold(source, true) >= 1.0f;
 		}
 
 		[DebuggerStepThrough]
@@ -48,11 +87,11 @@ namespace ReClassNET.Extensions
 		{
 			Contract.Requires(source != null);
 
-			return CalculatePrintableDataThreshold(source) >= 0.75f;
+			return CalculatePrintableDataThreshold(source, true) >= 0.75f;
 		}
 
 		[DebuggerStepThrough]
-		public static float CalculatePrintableDataThreshold(this IEnumerable<char> source)
+		public static float CalculatePrintableDataThreshold(this IEnumerable<char> source, bool strictly = false)
 		{
 			var doCountValid = true;
 			var countValid = 0;
@@ -60,11 +99,16 @@ namespace ReClassNET.Extensions
 
 			foreach (var c in source)
 			{
+				if (c == 0)
+				{
+					break;
+				}
+
 				countAll++;
 
 				if (doCountValid)
 				{
-					if (c.IsPrintable())
+					if (strictly ? c.IsStrictlyPrintable() : c.IsPrintable())
 					{
 						countValid++;
 					}

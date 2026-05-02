@@ -69,6 +69,8 @@ namespace ReClassNET.DataExchange.ReClass
 			typeof(Utf16TextPtrNode),
 			typeof(Utf32TextNode),
 			typeof(Utf32TextPtrNode),
+			typeof(DefaultTextNode),
+			typeof(DefaultTextPtrNode),
 			typeof(Vector2Node),
 			typeof(Vector3Node),
 			typeof(Vector4Node),

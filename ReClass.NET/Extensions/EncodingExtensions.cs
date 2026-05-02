@@ -10,7 +10,7 @@ namespace ReClassNET.Extensions
 		/// <returns>The byte count per character.</returns>
 		public static int GuessByteCountPerChar(this Encoding encoding)
 		{
-			if (encoding.IsSameCodePage(Encoding.UTF8) || encoding.CodePage == 1252 /* Windows-1252 */ || encoding.IsSameCodePage(Encoding.ASCII))
+			if (encoding.IsSameCodePage(Encoding.UTF8) || encoding.CodePage == 1252 /* Windows-1252 */ || encoding.CodePage == 1251 /* Windows-1251 */ || encoding.IsSameCodePage(Encoding.ASCII) || encoding.IsSameCodePage(Encoding.Default))
 			{
 				return 1;
 			}

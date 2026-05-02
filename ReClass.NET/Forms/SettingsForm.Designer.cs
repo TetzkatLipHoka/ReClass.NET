@@ -131,6 +131,8 @@ namespace ReClassNET.Forms
             this.bannerBox = new ReClassNET.Controls.BannerBox();
             this.utf32TextSettingsLabel = new System.Windows.Forms.Label();
             this.utf32TextTypeTextBox = new System.Windows.Forms.TextBox();
+            this.rawDataEncodingComboBox = new System.Windows.Forms.ComboBox();
+            this.rawDataEncodingLabel = new System.Windows.Forms.Label();
             this.settingsTabControl.SuspendLayout();
             this.generalSettingsTabPage.SuspendLayout();
             this.fileAssociationGroupBox.SuspendLayout();
@@ -298,6 +300,8 @@ namespace ReClassNET.Forms
             // 
             // displayGroupBox
             // 
+            this.displayGroupBox.Controls.Add(this.rawDataEncodingComboBox);
+            this.displayGroupBox.Controls.Add(this.rawDataEncodingLabel);
             this.displayGroupBox.Controls.Add(this.randomizeWindowTitleCheckBox);
             this.displayGroupBox.Controls.Add(this.runAsAdminCheckBox);
             this.displayGroupBox.Controls.Add(this.highlightChangedValuesCheckBox);
@@ -306,10 +310,28 @@ namespace ReClassNET.Forms
             this.displayGroupBox.Controls.Add(this.showNodeAddressCheckBox);
             this.displayGroupBox.Location = new System.Drawing.Point(283, 39);
             this.displayGroupBox.Name = "displayGroupBox";
-            this.displayGroupBox.Size = new System.Drawing.Size(265, 160);
+            this.displayGroupBox.Size = new System.Drawing.Size(265, 186);
             this.displayGroupBox.TabIndex = 2;
             this.displayGroupBox.TabStop = false;
             this.displayGroupBox.Text = "Display";
+            // 
+            // rawDataEncodingComboBox
+            // 
+            this.rawDataEncodingComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.rawDataEncodingComboBox.FormattingEnabled = true;
+            this.rawDataEncodingComboBox.Location = new System.Drawing.Point(125, 157);
+            this.rawDataEncodingComboBox.Name = "rawDataEncodingComboBox";
+            this.rawDataEncodingComboBox.Size = new System.Drawing.Size(131, 21);
+            this.rawDataEncodingComboBox.TabIndex = 7;
+            // 
+            // rawDataEncodingLabel
+            // 
+            this.rawDataEncodingLabel.AutoSize = true;
+            this.rawDataEncodingLabel.Location = new System.Drawing.Point(6, 160);
+            this.rawDataEncodingLabel.Name = "rawDataEncodingLabel";
+            this.rawDataEncodingLabel.Size = new System.Drawing.Size(104, 13);
+            this.rawDataEncodingLabel.TabIndex = 6;
+            this.rawDataEncodingLabel.Text = "Raw Data Encoding:";
             // 
             // randomizeWindowTitleCheckBox
             // 
@@ -1247,5 +1269,7 @@ namespace ReClassNET.Forms
 		private System.Windows.Forms.TextBox nintTypeTextBox;
 		private System.Windows.Forms.Label utf32TextSettingsLabel;
 		private System.Windows.Forms.TextBox utf32TextTypeTextBox;
+		private System.Windows.Forms.Label rawDataEncodingLabel;
+		private System.Windows.Forms.ComboBox rawDataEncodingComboBox;
 	}
 }

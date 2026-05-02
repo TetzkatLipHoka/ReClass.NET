@@ -85,7 +85,7 @@ namespace ReClassNET.Nodes
 					return new UInt64Node();
 			}
 
-			throw new Exception(); // TODO
+			throw new ArgumentOutOfRangeException(nameof(Bits));
 		}
 
 		/// <summary>Converts the memory value to a bit string.</summary>

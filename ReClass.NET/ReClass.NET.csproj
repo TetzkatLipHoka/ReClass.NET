@@ -475,6 +475,9 @@
     <Compile Include="Nodes\UTF32TextNode.cs" />
     <Compile Include="Nodes\UTF32TextPtrNode.cs" />
     <Compile Include="Nodes\UTF8TextNode.cs" />
+    <Compile Include="Nodes\UTF8TextPtrNode.cs" />
+    <Compile Include="Nodes\DefaultTextNode.cs" />
+    <Compile Include="Nodes\DefaultTextPtrNode.cs" />
     <Compile Include="Nodes\UInt32Node.cs" />
     <Compile Include="Nodes\UInt64Node.cs" />
     <Compile Include="Nodes\UInt8Node.cs" />
@@ -484,7 +487,6 @@
     <Compile Include="Nodes\Hex64Node.cs" />
     <Compile Include="Nodes\Hex8Node.cs" />
     <Compile Include="Nodes\UInt16Node.cs" />
-    <Compile Include="Nodes\UTF8TextPtrNode.cs" />
     <Compile Include="Nodes\Vector2Node.cs" />
     <Compile Include="Nodes\Vector3Node.cs" />
     <Compile Include="Nodes\Vector4Node.cs" />

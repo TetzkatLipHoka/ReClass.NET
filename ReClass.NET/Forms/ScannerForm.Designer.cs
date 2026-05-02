@@ -59,6 +59,7 @@ namespace ReClassNET.Forms
 			this.roundStrictRadioButton = new System.Windows.Forms.RadioButton();
 			this.stringOptionsGroupBox = new System.Windows.Forms.GroupBox();
 			this.caseSensitiveCheckBox = new System.Windows.Forms.CheckBox();
+			this.encodingSystemDefaultRadioButton = new System.Windows.Forms.RadioButton();
 			this.encodingUtf32RadioButton = new System.Windows.Forms.RadioButton();
 			this.encodingUtf16RadioButton = new System.Windows.Forms.RadioButton();
 			this.encodingUtf8RadioButton = new System.Windows.Forms.RadioButton();
@@ -398,6 +399,7 @@ namespace ReClassNET.Forms
 			// 
 			// stringOptionsGroupBox
 			// 
+			this.stringOptionsGroupBox.Controls.Add(this.encodingSystemDefaultRadioButton);
 			this.stringOptionsGroupBox.Controls.Add(this.caseSensitiveCheckBox);
 			this.stringOptionsGroupBox.Controls.Add(this.encodingUtf32RadioButton);
 			this.stringOptionsGroupBox.Controls.Add(this.encodingUtf16RadioButton);
@@ -422,6 +424,16 @@ namespace ReClassNET.Forms
 			this.caseSensitiveCheckBox.Text = "Case sensitive";
 			this.infoToolTip.SetToolTip(this.caseSensitiveCheckBox, "ASD == asd");
 			this.caseSensitiveCheckBox.UseVisualStyleBackColor = true;
+			// 
+			// encodingSystemDefaultRadioButton
+			// 
+			this.encodingSystemDefaultRadioButton.AutoSize = true;
+			this.encodingSystemDefaultRadioButton.Location = new System.Drawing.Point(164, 26);
+			this.encodingSystemDefaultRadioButton.Name = "encodingSystemDefaultRadioButton";
+			this.encodingSystemDefaultRadioButton.Size = new System.Drawing.Size(100, 17);
+			this.encodingSystemDefaultRadioButton.TabIndex = 4;
+			this.encodingSystemDefaultRadioButton.Text = "System Default";
+			this.encodingSystemDefaultRadioButton.UseVisualStyleBackColor = true;
 			// 
 			// encodingUtf32RadioButton
 			// 
@@ -845,6 +857,7 @@ namespace ReClassNET.Forms
 		private System.Windows.Forms.RadioButton encodingUtf32RadioButton;
 		private System.Windows.Forms.RadioButton encodingUtf16RadioButton;
 		private System.Windows.Forms.RadioButton encodingUtf8RadioButton;
+		private System.Windows.Forms.RadioButton encodingSystemDefaultRadioButton;
 		private System.Windows.Forms.Button firstScanButton;
 		private System.Windows.Forms.Button nextScanButton;
 		private System.Windows.Forms.ProgressBar scanProgressBar;

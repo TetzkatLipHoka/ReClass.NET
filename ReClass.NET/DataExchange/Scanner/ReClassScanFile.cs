@@ -108,6 +108,9 @@ namespace ReClassNET.DataExchange.Scanner
 							case "UTF32":
 								record.Encoding = Encoding.UTF32;
 								break;
+							case "System":
+								record.Encoding = Encoding.Default;
+								break;
 						}
 					}
 				}
@@ -148,7 +151,7 @@ namespace ReClassNET.DataExchange.Scanner
 							temp.SetAttributeValue(XmlValueLengthAttribute, r.ValueLength);
 							if (r.ValueType == ScanValueType.String)
 							{
-								temp.SetAttributeValue(XmlEncodingAttribute, r.Encoding.IsSameCodePage(Encoding.UTF8) ? "UTF8" : r.Encoding.IsSameCodePage(Encoding.Unicode) ? "UTF16" : "UTF32");
+								temp.SetAttributeValue(XmlEncodingAttribute, r.Encoding.IsSameCodePage(Encoding.UTF8) ? "UTF8" : r.Encoding.IsSameCodePage(Encoding.Unicode) ? "UTF16" : r.Encoding.IsSameCodePage(Encoding.UTF32) ? "UTF32" : "System");
 							}
 						}
 						return temp;

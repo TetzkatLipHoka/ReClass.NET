@@ -1,5 +1,7 @@
 using System;
 using System.Diagnostics.Contracts;
+using System.Linq;
+using System.Text;
 using System.Windows.Forms;
 using ReClassNET.Controls;
 using ReClassNET.Extensions;
@@ -40,6 +42,19 @@ namespace ReClassNET.Forms
 			SetGeneralBindings();
 			SetColorBindings();
 			SetTypeDefinitionBindings();
+
+			var encodings = new[]
+			{
+				Encoding.UTF8,
+				Encoding.Unicode,
+				Encoding.UTF32,
+				Encoding.Default,
+				Encoding.ASCII
+			};
+			rawDataEncodingComboBox.DataSource = encodings;
+			rawDataEncodingComboBox.DisplayMember = nameof(Encoding.EncodingName);
+			rawDataEncodingComboBox.SelectedItem = encodings.FirstOrDefault(e => e.CodePage == settings.RawDataEncoding.CodePage);
+			rawDataEncodingComboBox.SelectedIndexChanged += (s, e) => settings.RawDataEncoding = (Encoding)rawDataEncodingComboBox.SelectedItem;
 
 			if (NativeMethods.IsUnix())
 			{

@@ -99,7 +99,7 @@ bool EnumerateRemoteModulesWinapi(const RC_Pointer process, const InternalEnumer
 			EnumerateRemoteModuleData data = {};
 			data.BaseAddress = me32.modBaseAddr;
 			data.Size = me32.modBaseSize;
-			std::memcpy(data.Path, me32.szExePath, std::min(MAX_PATH, PATH_MAXIMUM_LENGTH));
+			str16cpy(data.Path, reinterpret_cast<const char16_t*>(me32.szExePath), PATH_MAXIMUM_LENGTH - 1);
 
 			callback(data);
 		} while (Module32NextW(handle, &me32));
@@ -206,18 +206,12 @@ void RC_CallConv EnumerateRemoteSectionsAndModules(RC_Pointer process, Enumerate
 							section.Category = SectionCategory::DATA;
 						}
 
-						try
-						{
-							// Copy the name because it is not null padded.
-							char buffer[IMAGE_SIZEOF_SHORT_NAME + 1] = { 0 };
-							std::memcpy(buffer, sectionHeader.Name, IMAGE_SIZEOF_SHORT_NAME);
-							MultiByteToUnicode(buffer, section.Name, IMAGE_SIZEOF_SHORT_NAME);
-						}
-						catch (std::range_error &)
-						{
-							std::memset(section.Name, 0, sizeof(section.Name));
-						}
-						std::memcpy(section.ModulePath, data.Path, std::min(MAX_PATH, PATH_MAXIMUM_LENGTH));
+						// Copy the name because it is not null padded.
+						char buffer[IMAGE_SIZEOF_SHORT_NAME + 1] = { 0 };
+						std::memcpy(buffer, sectionHeader.Name, IMAGE_SIZEOF_SHORT_NAME);
+						MultiByteToUnicode(buffer, section.Name, IMAGE_SIZEOF_SHORT_NAME);
+
+						std::memcpy(section.ModulePath, data.Path, sizeof(section.ModulePath));
 
 						break;
 					}

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Text;
 using ReClassNET.Memory;
@@ -8,6 +9,8 @@ namespace ReClassNET.Extensions
 {
 	public static class IRemoteMemoryReaderExtension
 	{
+		private static readonly Dictionary<Encoding, BytePattern> nullTerminatorCache = new Dictionary<Encoding, BytePattern>();
+
 		public static sbyte ReadRemoteInt8(this IRemoteMemoryReader reader, IntPtr address)
 		{
 			var data = reader.ReadRemoteMemory(address, sizeof(sbyte));
@@ -93,22 +96,28 @@ namespace ReClassNET.Extensions
 			Contract.Requires(length >= 0);
 			Contract.Ensures(Contract.Result<string>() != null);
 
-			var data = reader.ReadRemoteMemory(address, length * encoding.GuessByteCountPerChar());
+			var data = reader.ReadRemoteMemory(address, encoding.GetMaxByteCount(length));
 
 			try
 			{
-				var sb = new StringBuilder(encoding.GetString(data));
-				for (var i = 0; i < sb.Length; ++i)
+				var chars = encoding.GetChars(data);
+				var sb = new StringBuilder();
+				var count = 0;
+				foreach (var c in chars)
 				{
-					if (sb[i] == '\0')
+					if (c == '\0' || count >= length)
 					{
-						sb.Length = i;
 						break;
 					}
-					if (!sb[i].IsPrintable())
+					if (c.IsPrintable())
 					{
-						sb[i] = '.';
+						sb.Append(c);
 					}
+					else
+					{
+						sb.Append('.');
+					}
+					count++;
 				}
 				return sb.ToString();
 			}
@@ -124,10 +133,16 @@ namespace ReClassNET.Extensions
 			Contract.Requires(length >= 0);
 			Contract.Ensures(Contract.Result<string>() != null);
 
-			var data = reader.ReadRemoteMemory(address, length * encoding.GuessByteCountPerChar());
+			var data = reader.ReadRemoteMemory(address, encoding.GetMaxByteCount(length));
 
-			// TODO We should cache the pattern per encoding.
-			var index = PatternScanner.FindPattern(BytePattern.From(new byte[encoding.GuessByteCountPerChar()]), data);
+			if (!nullTerminatorCache.TryGetValue(encoding, out var pattern))
+			{
+				pattern = BytePattern.From(encoding.GetBytes("\0"));
+
+				nullTerminatorCache.Add(encoding, pattern);
+			}
+
+			var index = PatternScanner.FindPattern(pattern, data);
 			if (index == -1)
 			{
 				index = data.Length;
@@ -135,7 +150,12 @@ namespace ReClassNET.Extensions
 
 			try
 			{
-				return encoding.GetString(data, 0, Math.Min(index, data.Length));
+				var str = encoding.GetString(data, 0, Math.Min(index, data.Length));
+				if (str.Length > length)
+				{
+					str = str.Substring(0, length);
+				}
+				return str;
 			}
 			catch
 			{

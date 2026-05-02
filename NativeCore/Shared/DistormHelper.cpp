@@ -110,8 +110,9 @@ void FillInstructionData(const _CodeInfo& info, const RC_Pointer address, const 
 		
 		MultiByteToUnicode(
 			reinterpret_cast<const char*>(instructionInfo.mnemonic.p),
+			static_cast<int>(instructionInfo.mnemonic.length),
 			data->Instruction,
-			instructionInfo.mnemonic.length
+			64
 		);
 		if (instructionInfo.operands.length != 0)
 		{
@@ -121,8 +122,9 @@ void FillInstructionData(const _CodeInfo& info, const RC_Pointer address, const 
 				reinterpret_cast<const char*>(instructionInfo.operands.p),
 				0,
 				data->Instruction,
-				instructionInfo.mnemonic.length + 1,
-				std::min<int>(64 - 1 - instructionInfo.mnemonic.length, instructionInfo.operands.length)
+				static_cast<int>(instructionInfo.mnemonic.length) + 1,
+				static_cast<int>(instructionInfo.operands.length),
+				static_cast<int>(64 - 1 - instructionInfo.mnemonic.length)
 			);
 		}
 

@@ -1,5 +1,6 @@
 using System.Diagnostics.Contracts;
 using System.IO;
+using System.Text;
 using System.Xml.Linq;
 
 namespace ReClassNET.Util
@@ -51,6 +52,9 @@ namespace ReClassNET.Util
 					XElementSerializer.TryRead(display, nameof(settings.ShowCommentSymbol), e => settings.ShowCommentSymbol = XElementSerializer.ToBool(e));
 					XElementSerializer.TryRead(display, nameof(settings.ShowCommentString), e => settings.ShowCommentString = XElementSerializer.ToBool(e));
 					XElementSerializer.TryRead(display, nameof(settings.ShowCommentPluginInfo), e => settings.ShowCommentPluginInfo = XElementSerializer.ToBool(e));
+					XElementSerializer.TryRead(display, nameof(settings.RawDataEncoding), e => {
+						try { settings.RawDataEncoding = Encoding.GetEncoding(XElementSerializer.ToInt(e)); } catch { /* ignored */ }
+					});
 				}
 				var colors = root?.Element(XmlColorsElement);
 				if (colors != null)
@@ -121,7 +125,8 @@ namespace ReClassNET.Util
 						XElementSerializer.ToXml(nameof(settings.ShowCommentRtti), settings.ShowCommentRtti),
 						XElementSerializer.ToXml(nameof(settings.ShowCommentSymbol), settings.ShowCommentSymbol),
 						XElementSerializer.ToXml(nameof(settings.ShowCommentString), settings.ShowCommentString),
-						XElementSerializer.ToXml(nameof(settings.ShowCommentPluginInfo), settings.ShowCommentPluginInfo)
+						XElementSerializer.ToXml(nameof(settings.ShowCommentPluginInfo), settings.ShowCommentPluginInfo),
+						XElementSerializer.ToXml(nameof(settings.RawDataEncoding), settings.RawDataEncoding.CodePage)
 					),
 					new XElement(
 						XmlColorsElement,

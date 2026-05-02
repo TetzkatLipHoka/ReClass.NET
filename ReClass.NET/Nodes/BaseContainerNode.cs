@@ -359,7 +359,7 @@ namespace ReClassNET.Nodes
 		/// <param name="child">The child.</param>
 		protected internal virtual void ChildHasChanged(BaseNode child)
 		{
-			// TODO Add BaseNode.GetParentContainer
+			GetParentContainer()?.ChildHasChanged(this);
 		}
 	}
 }

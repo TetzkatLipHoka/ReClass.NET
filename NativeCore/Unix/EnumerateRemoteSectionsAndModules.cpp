@@ -97,7 +97,7 @@ extern "C" void RC_CallConv EnumerateRemoteSectionsAndModules(RC_Pointer handle,
 			module.End = module.End != 0 ? std::max(module.End, end) : end;
 			if (module.Path[0] == 0)
 			{
-				std::memcpy(module.Path, section.ModulePath, PATH_MAXIMUM_LENGTH);
+				std::memcpy(module.Path, section.ModulePath, sizeof(module.Path));
 			}
 		}
 		else
@@ -123,7 +123,7 @@ extern "C" void RC_CallConv EnumerateRemoteSectionsAndModules(RC_Pointer handle,
 			EnumerateRemoteModuleData module = {};
 			module.BaseAddress = reinterpret_cast<RC_Pointer>(kv.second.Start);
 			module.Size = kv.second.End - kv.second.Start;
-			std::memcpy(module.Path, kv.second.Path, PATH_MAXIMUM_LENGTH);
+			std::memcpy(module.Path, kv.second.Path, sizeof(module.Path));
 
 			callbackModule(&module);
 		}

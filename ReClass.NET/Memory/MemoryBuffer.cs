@@ -316,6 +316,11 @@ namespace ReClassNET.Memory
 
 		public string ReadString(Encoding encoding, int offset, int length)
 		{
+			return ReadString(encoding, offset, length, false);
+		}
+
+		public string ReadString(Encoding encoding, int offset, int length, bool stopAtNullCharacter)
+		{
 			Contract.Requires(encoding != null);
 			Contract.Requires(offset >= 0);
 			Contract.Requires(length >= 0);
@@ -331,17 +336,30 @@ namespace ReClassNET.Memory
 				return string.Empty;
 			}
 
-			var sb = new StringBuilder(encoding.GetString(data, Offset + offset, length));
-			for (var i = 0; i < sb.Length; ++i)
+			var chars = encoding.GetChars(data, Offset + offset, length);
+			var sb = new StringBuilder();
+			foreach (var c in chars)
 			{
-				if (!sb[i].IsPrintable())
+				if (c == '\0')
 				{
-					sb[i] = '.';
+					if (stopAtNullCharacter)
+					{
+						break;
+					}
+					sb.Append('.');
+				}
+				else if (c.IsPrintable())
+				{
+					sb.Append(c);
+				}
+				else
+				{
+					sb.Append('.');
 				}
 			}
+
 			return sb.ToString();
 		}
-
 		public bool HasChanged(int offset, int length)
 		{
 			if (!hasHistory)

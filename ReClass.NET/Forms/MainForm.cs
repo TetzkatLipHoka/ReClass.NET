@@ -28,7 +28,7 @@ namespace ReClassNET.Forms
 	public partial class MainForm : IconForm
 	{
 		private readonly PluginManager pluginManager;
-		private readonly IconProvider iconProvider = new IconProvider();
+		private readonly IconProvider iconProvider = IconProvider.Instance;
 
 		private ReClassNetProject currentProject;
 		public ReClassNetProject CurrentProject => currentProject;
@@ -662,6 +662,9 @@ namespace ReClassNET.Forms
 					break;
 				case Utf32TextNode node:
 					comparer = new StringMemoryComparer(node.ReadValueFromMemory(selectedNode.Memory), Encoding.UTF32, true);
+					break;
+				case DefaultTextNode node:
+					comparer = new StringMemoryComparer(node.ReadValueFromMemory(selectedNode.Memory), Encoding.Default, true);
 					break;
 				default:
 					return;
