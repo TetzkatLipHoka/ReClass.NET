@@ -18,6 +18,7 @@ This is a port of ReClass to the .NET platform with lots of additional features.
   - Vector 2 / 3 / 4
   - Matrix 3x3 / 3x4 / 4x4
   - UTF8 / UTF16 / UTF32 Text and pointer to text
+  - System Text (system default / ANSI code page, e.g. Windows-1251) and pointer to text
   - Virtual Tables
   - Function
   - Function Pointer
@@ -36,7 +37,7 @@ This is a port of ReClass to the .NET platform with lots of additional features.
   - Import files from Cheat Engine and CrySearch
   - Scan for values correlated to your input
 - Class address calculator
-- Code Generator (C++ / C#)
+- Code Generator (C / C++ / C# / Rust / Delphi)
 - Module / Section Dumper
 - Linux Support (tested on Ubuntu 18.04)
 - Debugger with "Find out what writes/accesses this address" support
@@ -59,6 +60,11 @@ This is a port of ReClass to the .NET platform with lots of additional features.
 - allow naming unions
 - add support for generating C code
 - Added **{ClassName}** support to the address field
+- Delphi / Pascal code generator
+- Russian language support and System Text nodes for system-default (ANSI) code pages
+- Configurable Raw Data Encoding
+- Built-in MCP (Model Context Protocol) server for AI / LLM integration
+- Filterable sections / modules list in the Process Info window with readable (rwxpg) permissions
 
 ## Plugins
 - [Sample Plugins](https://github.com/ReClassNET/ReClass.NET-SamplePlugin)
@@ -197,3 +203,5 @@ Settings
 - [dschu012](https://github.com/dschu012/)
 - [Ross Weir](https://github.com/ross-weir/)
 - [piepieonline](https://github.com/piepieonline/)
+- [AngelHeal](https://github.com/AngelHeal/)
+- [BlueBottleGG](https://github.com/BlueBottleGG/)
