@@ -51,6 +51,8 @@ namespace ReClassNET.Util
 					XElementSerializer.TryRead(general, nameof(settings.CppGeneratorShowOffset), e => settings.CppGeneratorShowOffset = XElementSerializer.ToBool(e));
 					XElementSerializer.TryRead(general, nameof(settings.CppGeneratorShowPadding), e => settings.CppGeneratorShowPadding = XElementSerializer.ToBool(e));
 					XElementSerializer.TryRead(general, nameof(settings.DefaultPlugin), e => settings.DefaultPlugin = XElementSerializer.ToString(e));
+					XElementSerializer.TryRead(general, nameof(settings.McpServerEnabled), e => settings.McpServerEnabled = XElementSerializer.ToBool(e));
+					XElementSerializer.TryRead(general, nameof(settings.McpServerPort), e => settings.McpServerPort = XElementSerializer.ToInt(e));
 					// Load hotkeys
 					XElementSerializer.TryRead(general, "NodeHotkeys", e =>
 					{
@@ -179,7 +181,9 @@ namespace ReClassNET.Util
 						XElementSerializer.ToXml(nameof(settings.EnhancedCaret), settings.EnhancedCaret),
 						XElementSerializer.ToXml(nameof(settings.CppGeneratorShowOffset), settings.CppGeneratorShowOffset),
 						XElementSerializer.ToXml(nameof(settings.CppGeneratorShowPadding), settings.CppGeneratorShowPadding),
-						XElementSerializer.ToXml(nameof(settings.DefaultPlugin), settings.DefaultPlugin)
+						XElementSerializer.ToXml(nameof(settings.DefaultPlugin), settings.DefaultPlugin),
+						XElementSerializer.ToXml(nameof(settings.McpServerEnabled), settings.McpServerEnabled),
+						XElementSerializer.ToXml(nameof(settings.McpServerPort), settings.McpServerPort)
 					),
 					new XElement(
 						XmlDisplayElement,

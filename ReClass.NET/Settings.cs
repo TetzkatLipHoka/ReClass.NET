@@ -37,6 +37,10 @@ namespace ReClassNET
 
 		public string DefaultPlugin { get; set; } = "Default";
 
+		public bool McpServerEnabled { get; set; } = false;
+
+		public int McpServerPort { get; set; } = 51000;
+
 		// Node Drawing Settings
 
 		public bool ShowNodeAddress { get; set; } = true;

@@ -48,6 +48,8 @@ namespace ReClassNET.Forms
 		private Task loadSymbolsTask;
 		private CancellationTokenSource loadSymbolsTaskToken;
 
+		private Mcp.McpServer mcpServer;
+
 		public ProjectView ProjectView => projectView;
 
 		public MenuStrip MainMenu => mainMenuStrip;
@@ -177,10 +179,18 @@ namespace ReClassNET.Forms
 			}
 
 			SetStateOfUndoRedoButtons();
+
+			mcpServerToolStripMenuItem.Checked = Program.Settings.McpServerEnabled;
+			if (Program.Settings.McpServerEnabled)
+			{
+				StartMcpServer();
+			}
 		}
 
 		protected override void OnFormClosed(FormClosedEventArgs e)
 		{
+			StopMcpServer();
+
 			if (WindowState == FormWindowState.Normal || WindowState == FormWindowState.Maximized)
 			{
 				Properties.Settings.Default.FormLocationX = this.Location.X;
@@ -518,6 +528,71 @@ namespace ReClassNET.Forms
 		private void generateRustCodeToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			ShowCodeGeneratorForm(new RustCodeGenerator());
+		}
+
+		private void generateDelphiCodeToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			ShowCodeGeneratorForm(new PascalCodeGenerator());
+		}
+
+		private void mcpServerToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			if (mcpServer != null && mcpServer.IsRunning)
+			{
+				StopMcpServer();
+				Program.Settings.McpServerEnabled = false;
+				mcpServerToolStripMenuItem.Checked = false;
+			}
+			else
+			{
+				StartMcpServer();
+				Program.Settings.McpServerEnabled = mcpServer != null && mcpServer.IsRunning;
+				mcpServerToolStripMenuItem.Checked = Program.Settings.McpServerEnabled;
+			}
+		}
+
+		private void StartMcpServer()
+		{
+			if (mcpServer != null && mcpServer.IsRunning)
+			{
+				return;
+			}
+
+			try
+			{
+				mcpServer = new Mcp.McpServer(Program.Logger);
+				mcpServer.Start(Program.Settings.McpServerPort);
+			}
+			catch (Exception ex)
+			{
+				Program.Logger.Log(ex);
+				MessageBox.Show($"Could not start the MCP server: {ex.Message}", Constants.ApplicationName, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+				mcpServer = null;
+			}
+		}
+
+		private void StopMcpServer()
+		{
+			if (mcpServer == null)
+			{
+				return;
+			}
+
+			mcpServer.Stop();
+			mcpServer.Dispose();
+			mcpServer = null;
+		}
+
+		public void SetStatusMessage(string text)
+		{
+			if (InvokeRequired)
+			{
+				BeginInvoke((MethodInvoker)(() => SetStatusMessage(text)));
+				return;
+			}
+
+			infoToolStripStatusLabel.Text = text;
+			infoToolStripStatusLabel.Visible = !string.IsNullOrEmpty(text);
 		}
 
 		private void aboutToolStripMenuItem_Click(object sender, EventArgs e)

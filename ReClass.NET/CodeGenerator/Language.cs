@@ -5,6 +5,7 @@
 		C,
 		Cpp,
 		CSharp,
-		Rust
+		Rust,
+		Pascal
 	}
 }

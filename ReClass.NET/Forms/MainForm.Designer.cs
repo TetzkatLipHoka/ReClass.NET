@@ -174,6 +174,8 @@ namespace ReClassNET.Forms
 			this.generateCppCodeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.generateCSharpCodeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.generateRustCodeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.generateDelphiCodeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.mcpServerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.undoToolbarMenuItem = new ReClassNET.Controls.TypeToolStripMenuItem();
@@ -1129,6 +1131,7 @@ namespace ReClassNET.Forms
             this.toolStripSeparator3,
             this.settingsToolStripMenuItem,
             this.pluginsToolStripMenuItem,
+            this.mcpServerToolStripMenuItem,
             this.toolStripSeparator5,
             this.quitToolStripMenuItem});
 			this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
@@ -1374,7 +1377,8 @@ namespace ReClassNET.Forms
             this.generateCCodeToolStripMenuItem,
             this.generateCppCodeToolStripMenuItem,
             this.generateCSharpCodeToolStripMenuItem,
-            this.generateRustCodeToolStripMenuItem});
+            this.generateRustCodeToolStripMenuItem,
+            this.generateDelphiCodeToolStripMenuItem});
 			this.projectToolStripMenuItem.Name = "projectToolStripMenuItem";
 			this.projectToolStripMenuItem.Size = new System.Drawing.Size(56, 20);
 			this.projectToolStripMenuItem.Text = "Project";
@@ -1459,7 +1463,22 @@ namespace ReClassNET.Forms
 			this.generateRustCodeToolStripMenuItem.Size = new System.Drawing.Size(198, 22);
 			this.generateRustCodeToolStripMenuItem.Text = "Generate Rust Code...";
 			this.generateRustCodeToolStripMenuItem.Click += new System.EventHandler(this.generateRustCodeToolStripMenuItem_Click);
-			// 
+			//
+			// generateDelphiCodeToolStripMenuItem
+			//
+			this.generateDelphiCodeToolStripMenuItem.Image = global::ReClassNET.Properties.Resources.B16x16_Page_Code_Cpp;
+			this.generateDelphiCodeToolStripMenuItem.Name = "generateDelphiCodeToolStripMenuItem";
+			this.generateDelphiCodeToolStripMenuItem.Size = new System.Drawing.Size(198, 22);
+			this.generateDelphiCodeToolStripMenuItem.Text = "Generate Delphi Code...";
+			this.generateDelphiCodeToolStripMenuItem.Click += new System.EventHandler(this.generateDelphiCodeToolStripMenuItem_Click);
+			//
+			// mcpServerToolStripMenuItem
+			//
+			this.mcpServerToolStripMenuItem.Name = "mcpServerToolStripMenuItem";
+			this.mcpServerToolStripMenuItem.Size = new System.Drawing.Size(195, 22);
+			this.mcpServerToolStripMenuItem.Text = "MCP Server";
+			this.mcpServerToolStripMenuItem.Click += new System.EventHandler(this.mcpServerToolStripMenuItem_Click);
+			//
 			// helpToolStripMenuItem
 			// 
 			this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -1602,6 +1621,8 @@ namespace ReClassNET.Forms
 		private System.Windows.Forms.ToolStripMenuItem generateCppCodeToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem generateCSharpCodeToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem generateRustCodeToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem generateDelphiCodeToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem mcpServerToolStripMenuItem;
 		private System.Windows.Forms.Timer processUpdateTimer;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator17;
 		private System.Windows.Forms.ToolStripMenuItem loadSymbolToolStripMenuItem;

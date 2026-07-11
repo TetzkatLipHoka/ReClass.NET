@@ -172,6 +172,7 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <Reference Include="System.Web.Extensions" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AddressParser\DynamicCompiler.cs" />
@@ -184,6 +185,7 @@
     <Compile Include="AddressParser\Token.cs" />
     <Compile Include="AddressParser\Tokenizer.cs" />
     <Compile Include="CodeGenerator\Language.cs" />
+    <Compile Include="CodeGenerator\PascalCodeGenerator.cs" />
     <Compile Include="CodeGenerator\RustCodeGenerator.cs" />
     <Compile Include="ColorPreset.cs" />
     <Compile Include="Core\CoreFunctionsManager.cs" />
@@ -525,6 +527,7 @@
     <Compile Include="Logger\ILogger.cs" />
     <Compile Include="Logger\LogLevel.cs" />
     <Compile Include="Logger\NullLogger.cs" />
+    <Compile Include="Mcp\McpServer.cs" />
     <Compile Include="Memory\MemoryBuffer.cs" />
     <Compile Include="Controls\MemoryViewControl.cs">
       <SubType>UserControl</SubType>
