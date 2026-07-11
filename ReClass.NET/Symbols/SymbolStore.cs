@@ -4,7 +4,7 @@ using System.Diagnostics.Contracts;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
-using Dia2Lib;
+using DIA;
 using Microsoft.Win32;
 using ReClassNET.Extensions;
 using ReClassNET.Memory;

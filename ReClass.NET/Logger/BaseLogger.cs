@@ -1,4 +1,3 @@
-using Microsoft.SqlServer.MessageBox;
 using System;
 using System.Diagnostics.Contracts;
 using System.Diagnostics;
@@ -12,7 +11,7 @@ namespace ReClassNET.Logger
 
 		public void Log(Exception ex)
 		{
-			Log(LogLevel.Error, ExceptionMessageBox.GetMessageText(ex), ex);
+			Log(LogLevel.Error, ex.ToString(), ex);
 		}
 
 		public void Log(LogLevel level, string message)

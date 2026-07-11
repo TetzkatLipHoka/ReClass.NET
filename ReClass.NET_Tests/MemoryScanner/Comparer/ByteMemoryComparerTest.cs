@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using NFluent;
 using ReClassNET.MemoryScanner;
 using ReClassNET.MemoryScanner.Comparer;
@@ -129,7 +129,7 @@ namespace ReClass.NET_Tests.MemoryScanner.Comparer
 			var basicData = GetTestCompareBasicData();
 			foreach (var x in basicData)
 			{
-				data.Add((ScanCompareType)x[0], (byte)x[1], (byte)x[2], (byte[])x[3], new ByteScanResult(1), (bool)x[4], (ScanResult)x[5]);
+				data.Add((ScanCompareType)x.Data.Item1, (byte)x.Data.Item2, (byte)x.Data.Item3, (byte[])x.Data.Item4, new ByteScanResult(1), (bool)x.Data.Item5, (ScanResult)x.Data.Item6);
 			}
 
 			return data;

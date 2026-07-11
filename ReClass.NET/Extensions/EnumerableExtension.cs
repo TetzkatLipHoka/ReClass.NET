@@ -105,23 +105,6 @@ namespace ReClassNET.Extensions
 		}
 
 		[DebuggerStepThrough]
-		public static IEnumerable<TSource> DistinctBy<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector)
-		{
-			Contract.Requires(source != null);
-			Contract.Requires(keySelector != null);
-			Contract.Ensures(Contract.Result<IEnumerable<TSource>>() != null);
-
-			var knownKeys = new HashSet<TKey>();
-			foreach (var element in source)
-			{
-				if (knownKeys.Add(keySelector(element)))
-				{
-					yield return element;
-				}
-			}
-		}
-
-		[DebuggerStepThrough]
 		public static bool IsEquivalentTo<T>(this IEnumerable<T> source, IEnumerable<T> other)
 		{
 			Contract.Requires(source != null);

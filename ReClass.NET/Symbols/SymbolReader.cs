@@ -1,7 +1,7 @@
-﻿using System;
+using System;
 using System.Diagnostics.Contracts;
 using System.Text;
-using Dia2Lib;
+using DIA;
 using ReClassNET.Extensions;
 using ReClassNET.Memory;
 using ReClassNET.Native;
@@ -87,7 +87,7 @@ namespace ReClassNET.Symbols
 
 			var rva = address.Sub(module.Start);
 
-			diaSession.Interface.findSymbolByRVA((uint)rva.ToInt32(), SymTagEnum.SymTagNull, out var diaSymbol);
+			IDiaSymbol diaSymbol = diaSession.Interface.findSymbolByRVA((uint)rva.ToInt32(), SymTagEnum.Null);
 			if (diaSymbol != null)
 			{
 				using var symbol = new ComDisposableWrapper<IDiaSymbol>(diaSymbol);

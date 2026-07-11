@@ -7,8 +7,9 @@ using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Threading;
-using System.Web.Script.Serialization;
 using System.Windows.Forms;
 using ReClassNET.CodeGenerator;
 using ReClassNET.Forms;
@@ -28,7 +29,13 @@ namespace ReClassNET.Mcp
 		private const string ProtocolVersion = "2024-11-05";
 
 		private readonly ILogger logger;
-		private readonly JavaScriptSerializer serializer = new JavaScriptSerializer();
+
+		private static readonly JsonSerializerOptions jsonOptions = new JsonSerializerOptions
+		{
+			DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.Never
+		};
+
+		private static string Serialize(object value) => JsonSerializer.Serialize(value, jsonOptions);
 
 		private TcpListener listener;
 		private Thread acceptThread;
@@ -334,46 +341,51 @@ namespace ReClassNET.Mcp
 
 		private string HandleRpcPayload(string body)
 		{
-			object parsed;
+			JsonNode parsed;
 			try
 			{
-				parsed = serializer.DeserializeObject(body);
+				parsed = JsonNode.Parse(body);
 			}
 			catch (Exception ex)
 			{
-				return serializer.Serialize(MakeError(null, -32700, $"Parse error: {ex.Message}"));
+				return Serialize(MakeError(null, -32700, $"Parse error: {ex.Message}"));
 			}
 
 			// Batch request.
-			if (parsed is object[] batch)
+			if (parsed is JsonArray batch)
 			{
+				if (batch.Count == 0)
+				{
+					return Serialize(MakeError(null, -32600, "Invalid Request"));
+				}
+
 				var responses = new List<object>();
 				foreach (var item in batch)
 				{
-					var response = HandleSingleRpc(item as Dictionary<string, object>);
+					var response = HandleSingleRpc(item as JsonObject);
 					if (response != null)
 					{
 						responses.Add(response);
 					}
 				}
-				return responses.Count > 0 ? serializer.Serialize(responses) : null;
+				return responses.Count > 0 ? Serialize(responses) : null;
 			}
 
-			var single = HandleSingleRpc(parsed as Dictionary<string, object>);
-			return single != null ? serializer.Serialize(single) : null;
+			var single = HandleSingleRpc(parsed as JsonObject);
+			return single != null ? Serialize(single) : null;
 		}
 
-		private Dictionary<string, object> HandleSingleRpc(Dictionary<string, object> request)
+		private Dictionary<string, object> HandleSingleRpc(JsonObject request)
 		{
 			if (request == null)
 			{
 				return MakeError(null, -32600, "Invalid Request");
 			}
 
-			request.TryGetValue("id", out var id);
-			var hasId = request.ContainsKey("id");
-			var method = request.TryGetValue("method", out var m) ? m as string : null;
-			var @params = request.TryGetValue("params", out var p) ? p as Dictionary<string, object> : null;
+			var hasId = request.TryGetPropertyValue("id", out var idNode);
+			object id = JsonValueToClr(idNode);
+			var method = request.TryGetPropertyValue("method", out var m) ? m?.GetValue<string>() : null;
+			var @params = request.TryGetPropertyValue("params", out var p) ? p as JsonObject : null;
 
 			if (string.IsNullOrEmpty(method))
 			{
@@ -495,11 +507,11 @@ namespace ReClassNET.Mcp
 			};
 		}
 
-		private Dictionary<string, object> CallTool(Dictionary<string, object> @params)
+		private Dictionary<string, object> CallTool(JsonObject @params)
 		{
-			var name = @params != null && @params.TryGetValue("name", out var n) ? n as string : null;
-			var arguments = @params != null && @params.TryGetValue("arguments", out var a) ? a as Dictionary<string, object> : new Dictionary<string, object>();
-			arguments = arguments ?? new Dictionary<string, object>();
+			var name = @params != null && @params.TryGetPropertyValue("name", out var n) ? n?.GetValue<string>() : null;
+			var arguments = @params != null && @params.TryGetPropertyValue("arguments", out var a) ? a as JsonObject : null;
+			arguments = arguments ?? new JsonObject();
 
 			if (string.IsNullOrEmpty(name))
 			{
@@ -540,7 +552,7 @@ namespace ReClassNET.Mcp
 				result["id"] = process.UnderlayingProcess.Id.ToString();
 				result["path"] = process.UnderlayingProcess.Path;
 			}
-			return serializer.Serialize(result);
+			return Serialize(result);
 		}
 
 		private string ToolProjectState()
@@ -574,7 +586,7 @@ namespace ReClassNET.Mcp
 					}).ToList()
 				}).ToList();
 
-				return serializer.Serialize(new Dictionary<string, object>
+				return Serialize(new Dictionary<string, object>
 				{
 					["classes"] = classes,
 					["enums"] = enums
@@ -613,7 +625,7 @@ namespace ReClassNET.Mcp
 					}
 				}
 
-				return serializer.Serialize(new Dictionary<string, object> { ["matches"] = matches });
+				return Serialize(new Dictionary<string, object> { ["matches"] = matches });
 			});
 		}
 
@@ -639,7 +651,7 @@ namespace ReClassNET.Mcp
 				hex.Append(b.ToString("X2", CultureInfo.InvariantCulture));
 			}
 
-			return serializer.Serialize(new Dictionary<string, object>
+			return Serialize(new Dictionary<string, object>
 			{
 				["address"] = $"0x{resolved.ToInt64():X}",
 				["size"] = size,
@@ -664,7 +676,7 @@ namespace ReClassNET.Mcp
 			var resolved = ResolveAddress(address);
 			var success = process.WriteRemoteMemory(resolved, bytes);
 
-			return serializer.Serialize(new Dictionary<string, object>
+			return Serialize(new Dictionary<string, object>
 			{
 				["address"] = $"0x{resolved.ToInt64():X}",
 				["written"] = bytes.Length,
@@ -682,7 +694,7 @@ namespace ReClassNET.Mcp
 			return RunOnUiThread(() =>
 			{
 				Program.MainForm.SetStatusMessage(text);
-				return serializer.Serialize(new Dictionary<string, object> { ["ok"] = true });
+				return Serialize(new Dictionary<string, object> { ["ok"] = true });
 			});
 		}
 
@@ -782,24 +794,65 @@ namespace ReClassNET.Mcp
 
 		#region Helpers
 
-		private static string GetString(Dictionary<string, object> args, string key)
+		private static string GetString(JsonObject args, string key)
 		{
-			return args != null && args.TryGetValue(key, out var value) ? value?.ToString() : null;
+			if (args == null || !args.TryGetPropertyValue(key, out var node) || node == null)
+			{
+				return null;
+			}
+
+			if (node is JsonValue value)
+			{
+				if (value.TryGetValue<string>(out var s))
+				{
+					return s;
+				}
+				return value.ToString();
+			}
+
+			return node.ToString();
 		}
 
-		private static int GetInt(Dictionary<string, object> args, string key)
+		private static int GetInt(JsonObject args, string key)
 		{
-			if (args == null || !args.TryGetValue(key, out var value) || value == null)
+			if (args == null || !args.TryGetPropertyValue(key, out var node) || node is not JsonValue value)
 			{
 				return 0;
 			}
 
-			if (value is int i)
+			if (value.TryGetValue<int>(out var i))
 			{
 				return i;
 			}
+			if (value.TryGetValue<long>(out var l))
+			{
+				return (int)l;
+			}
+			if (value.TryGetValue<double>(out var d))
+			{
+				return (int)d;
+			}
 
 			return int.TryParse(value.ToString(), NumberStyles.Any, CultureInfo.InvariantCulture, out var parsed) ? parsed : 0;
+		}
+
+		/// <summary>Converts a JSON-RPC id node (number, string or null) to a CLR value for echoing back.</summary>
+		private static object JsonValueToClr(JsonNode node)
+		{
+			if (node is not JsonValue value)
+			{
+				return null;
+			}
+
+			if (value.TryGetValue<long>(out var l))
+			{
+				return l;
+			}
+			if (value.TryGetValue<string>(out var s))
+			{
+				return s;
+			}
+			return value.ToString();
 		}
 
 		private static T RunOnUiThread<T>(Func<T> action)

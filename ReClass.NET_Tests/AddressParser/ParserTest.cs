@@ -1,11 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using NFluent;
 using ReClassNET.AddressParser;
 using Xunit;
 
 namespace ReClass.NET_Tests.AddressParser
 {
-	class TestClassList : IProjectContext
+	class TestClassList : DynamicCompiler.IProjectContext
 	{
 		public IReadOnlyList<ReClassNET.Nodes.ClassNode> Classes { get; } = new List<ReClassNET.Nodes.ClassNode>{};
 	}

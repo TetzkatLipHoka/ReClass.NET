@@ -2,9 +2,9 @@ using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
+using System.Text;
 using System.Threading;
 using System.Windows.Forms;
-using Microsoft.SqlServer.MessageBox;
 using ReClassNET.Core;
 using ReClassNET.Forms;
 using ReClassNET.Logger;
@@ -80,6 +80,10 @@ namespace ReClassNET
 
 			CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
 
+			// .NET (Core) ships only a minimal set of encodings; register the full set so legacy
+			// code pages such as Windows-1251 (used by the System Text nodes) resolve correctly.
+			Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+
 			Settings = SettingsSerializer.Load();
 			Logger = new GuiLogger();
 
@@ -130,13 +134,11 @@ namespace ReClassNET
 		{
 			ex.HelpLink = Constants.HelpUrl;
 
-			var msg = new ExceptionMessageBox(ex)
-			{
-				Beep = false,
-				ShowToolBar = true,
-				Symbol = ExceptionMessageBoxSymbol.Error
-			};
-			msg.Show(null);
+			MessageBox.Show(
+				$"An exception occurred:{Environment.NewLine}{Environment.NewLine}{ex}{Environment.NewLine}{Environment.NewLine}For more assistance, see \"{Constants.HelpUrl}\".",
+				Constants.ApplicationName,
+				MessageBoxButtons.OK,
+				MessageBoxIcon.Error);
 		}
 	}
 }

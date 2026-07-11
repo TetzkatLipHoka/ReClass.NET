@@ -134,7 +134,7 @@ namespace ReClass.NET_Tests.MemoryScanner.Comparer
 			var basicData = GetTestCompareBasicData();
 			foreach (var x in basicData)
 			{
-				data.Add((ScanCompareType)x[0], (int)x[1], (int)x[2], (byte[])x[3], new IntegerScanResult(1), (bool)x[4], (ScanResult)x[5]);
+				data.Add((ScanCompareType)x.Data.Item1, (int)x.Data.Item2, (int)x.Data.Item3, (byte[])x.Data.Item4, new IntegerScanResult(1), (bool)x.Data.Item5, (ScanResult)x.Data.Item6);
 			}
 
 			return data;

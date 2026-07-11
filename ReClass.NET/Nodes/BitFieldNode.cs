@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Drawing;
 using System.Linq;
-using System.Web.UI.Design;
 using System.Windows.Forms;
 using System.Xml.Linq;
 using ReClassNET.Controls;
