@@ -127,6 +127,8 @@ namespace ReClassNET.Forms
 		private System.Windows.Forms.TextBox nintTypeTextBox;
 		private System.Windows.Forms.Label utf32TextSettingsLabel;
 		private System.Windows.Forms.TextBox utf32TextTypeTextBox;
+		private System.Windows.Forms.Label rawDataEncodingLabel;
+		private System.Windows.Forms.ComboBox rawDataEncodingComboBox;
 		private System.Windows.Forms.GroupBox cppGeneratorGroupBox;
 		/// <summary>
 		/// Required designer variable.
@@ -177,6 +179,8 @@ namespace ReClassNET.Forms
             this.showFloatCheckBox = new System.Windows.Forms.CheckBox();
             this.runAsAdminCheckBox = new System.Windows.Forms.CheckBox();
             this.displayGroupBox = new System.Windows.Forms.GroupBox();
+            this.rawDataEncodingComboBox = new System.Windows.Forms.ComboBox();
+            this.rawDataEncodingLabel = new System.Windows.Forms.Label();
             this.colorizeIconsCheckBox = new System.Windows.Forms.CheckBox();
             this.roundedPanelsCheckBox = new System.Windows.Forms.CheckBox();
             this.enhancedCaretCheckBox = new System.Windows.Forms.CheckBox();
@@ -304,7 +308,7 @@ namespace ReClassNET.Forms
             this.settingsTabControl.Location = new System.Drawing.Point(12, 60);
             this.settingsTabControl.Name = "settingsTabControl";
             this.settingsTabControl.SelectedIndex = 0;
-            this.settingsTabControl.Size = new System.Drawing.Size(562, 380);
+            this.settingsTabControl.Size = new System.Drawing.Size(562, 406);
             this.settingsTabControl.TabIndex = 1;
             // 
             // generalSettingsTabPage
@@ -320,7 +324,7 @@ namespace ReClassNET.Forms
             this.generalSettingsTabPage.Location = new System.Drawing.Point(4, 22);
             this.generalSettingsTabPage.Name = "generalSettingsTabPage";
             this.generalSettingsTabPage.Padding = new System.Windows.Forms.Padding(3);
-            this.generalSettingsTabPage.Size = new System.Drawing.Size(554, 354);
+            this.generalSettingsTabPage.Size = new System.Drawing.Size(554, 380);
             this.generalSettingsTabPage.TabIndex = 0;
             this.generalSettingsTabPage.Text = "General";
             this.generalSettingsTabPage.UseVisualStyleBackColor = true;
@@ -328,7 +332,7 @@ namespace ReClassNET.Forms
             // defaultPluginGroupBox
             // 
             this.defaultPluginGroupBox.Controls.Add(this.defaultPluginComboBox);
-            this.defaultPluginGroupBox.Location = new System.Drawing.Point(283, 214);
+            this.defaultPluginGroupBox.Location = new System.Drawing.Point(283, 240);
             this.defaultPluginGroupBox.Name = "defaultPluginGroupBox";
             this.defaultPluginGroupBox.Size = new System.Drawing.Size(265, 45);
             this.defaultPluginGroupBox.TabIndex = 7;
@@ -400,7 +404,7 @@ namespace ReClassNET.Forms
             this.fileAssociationGroupBox.Controls.Add(this.removeAssociationButton);
             this.fileAssociationGroupBox.Controls.Add(this.createAssociationButton);
             this.fileAssociationGroupBox.Controls.Add(this.associationInfoLabel);
-            this.fileAssociationGroupBox.Location = new System.Drawing.Point(6, 262);
+            this.fileAssociationGroupBox.Location = new System.Drawing.Point(6, 288);
             this.fileAssociationGroupBox.Name = "fileAssociationGroupBox";
             this.fileAssociationGroupBox.Size = new System.Drawing.Size(542, 86);
             this.fileAssociationGroupBox.TabIndex = 4;
@@ -536,6 +540,8 @@ namespace ReClassNET.Forms
             // 
             // displayGroupBox
             // 
+            this.displayGroupBox.Controls.Add(this.rawDataEncodingComboBox);
+            this.displayGroupBox.Controls.Add(this.rawDataEncodingLabel);
             this.displayGroupBox.Controls.Add(this.colorizeIconsCheckBox);
             this.displayGroupBox.Controls.Add(this.roundedPanelsCheckBox);
             this.displayGroupBox.Controls.Add(this.enhancedCaretCheckBox);
@@ -546,7 +552,7 @@ namespace ReClassNET.Forms
             this.displayGroupBox.Controls.Add(this.showNodeAddressCheckBox);
             this.displayGroupBox.Location = new System.Drawing.Point(283, 29);
             this.displayGroupBox.Name = "displayGroupBox";
-            this.displayGroupBox.Size = new System.Drawing.Size(265, 186);
+            this.displayGroupBox.Size = new System.Drawing.Size(265, 212);
             this.displayGroupBox.TabIndex = 2;
             this.displayGroupBox.TabStop = false;
             this.displayGroupBox.Text = "Display";
@@ -580,7 +586,25 @@ namespace ReClassNET.Forms
             this.enhancedCaretCheckBox.TabIndex = 7;
             this.enhancedCaretCheckBox.Text = "Use enhanced Caret";
             this.enhancedCaretCheckBox.UseVisualStyleBackColor = true;
-            // 
+            //
+            // rawDataEncodingComboBox
+            //
+            this.rawDataEncodingComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.rawDataEncodingComboBox.FormattingEnabled = true;
+            this.rawDataEncodingComboBox.Location = new System.Drawing.Point(125, 183);
+            this.rawDataEncodingComboBox.Name = "rawDataEncodingComboBox";
+            this.rawDataEncodingComboBox.Size = new System.Drawing.Size(131, 21);
+            this.rawDataEncodingComboBox.TabIndex = 9;
+            //
+            // rawDataEncodingLabel
+            //
+            this.rawDataEncodingLabel.AutoSize = true;
+            this.rawDataEncodingLabel.Location = new System.Drawing.Point(6, 186);
+            this.rawDataEncodingLabel.Name = "rawDataEncodingLabel";
+            this.rawDataEncodingLabel.Size = new System.Drawing.Size(104, 13);
+            this.rawDataEncodingLabel.TabIndex = 8;
+            this.rawDataEncodingLabel.Text = "Raw Data Encoding:";
+            //
             // highlightChangedValuesCheckBox
             // 
             this.highlightChangedValuesCheckBox.AutoSize = true;
@@ -1520,7 +1544,7 @@ namespace ReClassNET.Forms
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(586, 466);
+            this.ClientSize = new System.Drawing.Size(586, 492);
             this.Controls.Add(this.bannerBox);
             this.Controls.Add(this.settingsTabControl);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;

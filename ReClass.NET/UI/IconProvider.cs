@@ -4,6 +4,9 @@ namespace ReClassNET.UI
 {
 	public class IconProvider
 	{
+		private static IconProvider instance;
+		public static IconProvider Instance => instance ?? (instance = new IconProvider());
+
 		public int Dimensions { get; } = DpiUtil.ScaleIntX(16);
 
 		public Image OpenCloseOpen { get; } = DpiUtil.ScaleImage(Properties.Resources.B16x16_Open_Icon);

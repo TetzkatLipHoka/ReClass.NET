@@ -834,7 +834,7 @@ namespace ReClassNET.Forms
 					throw new InvalidInputException(dualValueBox.Value1);
 				}
 
-				var encoding = encodingUtf8RadioButton.Checked ? Encoding.UTF8 : encodingUtf16RadioButton.Checked ? Encoding.Unicode : Encoding.UTF32;
+				var encoding = encodingUtf8RadioButton.Checked ? Encoding.UTF8 : encodingUtf16RadioButton.Checked ? Encoding.Unicode : encodingUtf32RadioButton.Checked ? Encoding.UTF32 : Encoding.Default;
 				if (settings.ValueType == ScanValueType.String)
 				{
 					return new StringMemoryComparer(dualValueBox.Value1, encoding, caseSensitiveCheckBox.Checked);

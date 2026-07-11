@@ -267,26 +267,50 @@ typedef void(RC_CallConv EnumerateProcessCallback)(EnumerateProcessData* data);
 typedef void(RC_CallConv EnumerateRemoteSectionsCallback)(EnumerateRemoteSectionData* data);
 typedef void(RC_CallConv EnumerateRemoteModulesCallback)(EnumerateRemoteModuleData* data);
 
-// Helpers
-
-inline void MultiByteToUnicode(const char* src, const int srcOffset, RC_UnicodeChar* dst, const int dstOffset, const int size)
-{
-#if _MSC_VER >= 1900
-	// VS Bug: https://connect.microsoft.com/VisualStudio/feedback/details/1348277/link-error-when-using-std-codecvt-utf8-utf16-char16-t
-
-	using converter = std::wstring_convert<std::codecvt_utf8_utf16<int16_t>, int16_t>;
-#else
-	using converter = std::wstring_convert<std::codecvt_utf8_utf16<RC_UnicodeChar>, RC_UnicodeChar>;
+#ifdef _WIN32
+#include <windows.h>
 #endif
 
-	const auto temp = converter{}.from_bytes(src + srcOffset);
+// Helpers
 
-	std::memcpy(dst + dstOffset, temp.c_str(), std::min<int>(static_cast<int>(temp.length()), size) * sizeof(RC_UnicodeChar));
+inline void MultiByteToUnicode(const char* src, int srcLength, RC_UnicodeChar* dst, int dstSize)
+{
+	if (dstSize <= 0) return;
+#ifdef _WIN32
+	int len = MultiByteToWideChar(CP_ACP, 0, src, srcLength, reinterpret_cast<LPWSTR>(dst), dstSize);
+	if (len >= 0 && len < dstSize)
+	{
+		dst[len] = 0;
+	}
+	else
+	{
+		dst[dstSize - 1] = 0;
+	}
+#else
+	// fallback for non-windows
+	size_t converted;
+	if (srcLength == -1) srcLength = std::strlen(src);
+	std::mbstate_t state = std::mbstate_t();
+	converted = std::mbsrtowcs(reinterpret_cast<wchar_t*>(dst), &src, dstSize, &state);
+	if (converted == static_cast<size_t>(-1))
+	{
+		dst[0] = 0;
+	}
+	else if (converted < static_cast<size_t>(dstSize))
+	{
+		dst[converted] = 0;
+	}
+#endif
 }
 
-inline void MultiByteToUnicode(const char* src, RC_UnicodeChar* dst, const int size)
+inline void MultiByteToUnicode(const char* src, int srcOffset, RC_UnicodeChar* dst, int dstOffset, int srcLength, int dstSize)
 {
-	MultiByteToUnicode(src, 0, dst, 0, size);
+	MultiByteToUnicode(src + srcOffset, srcLength, dst + dstOffset, dstSize);
+}
+
+inline void MultiByteToUnicode(const char* src, RC_UnicodeChar* dst, int dstSize)
+{
+	MultiByteToUnicode(src, -1, dst, dstSize);
 }
 
 inline char16_t* str16cpy(char16_t* destination, const char16_t* source, size_t n)

@@ -28,7 +28,7 @@ namespace ReClassNET.UI
 			defaultNodeTypeGroupList.Add(new[] { typeof(BoolNode), typeof(BitFieldNode), typeof(EnumNode) });
 			defaultNodeTypeGroupList.Add(new[] { typeof(FloatNode), typeof(DoubleNode), typeof(CustomNode) });
 			defaultNodeTypeGroupList.Add(new[] { typeof(Vector4Node), typeof(Vector3Node), typeof(Vector2Node), typeof(Matrix4x4Node), typeof(Matrix3x4Node), typeof(Matrix3x3Node) });
-			defaultNodeTypeGroupList.Add(new[] { typeof(Utf8TextNode), typeof(Utf8TextPtrNode), typeof(Utf16TextNode), typeof(Utf16TextPtrNode) });
+			defaultNodeTypeGroupList.Add(new[] { typeof(Utf8TextNode), typeof(Utf8TextPtrNode), typeof(Utf16TextNode), typeof(Utf16TextPtrNode), typeof(DefaultTextNode), typeof(DefaultTextPtrNode) });
 			defaultNodeTypeGroupList.Add(new[] { typeof(PointerNode), typeof(ArrayNode), typeof(UnionNode) });
 			defaultNodeTypeGroupList.Add(new[] { typeof(ClassInstanceNode) });
 			defaultNodeTypeGroupList.Add(new[] { typeof(VirtualMethodTableNode), typeof(FunctionNode), typeof(FunctionPtrNode) });
@@ -62,7 +62,7 @@ namespace ReClassNET.UI
 
 			if (pluginNodeTypes.ContainsKey(plugin))
 			{
-				throw new InvalidOperationException(); // TODO
+				throw new InvalidOperationException($"The plugin '{plugin.GetType().FullName}' has already registered a node group.");
 			}
 
 			pluginNodeTypes.Add(plugin, nodeTypes);

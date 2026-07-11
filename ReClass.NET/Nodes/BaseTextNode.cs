@@ -90,13 +90,17 @@ namespace ReClassNET.Nodes
 			else if (spot.Id == 1)
 			{
 				var data = Encoding.GetBytes(spot.Text);
+				if (data.Length > MemorySize)
+				{
+					System.Array.Resize(ref data, MemorySize);
+				}
 				spot.Process.WriteRemoteMemory(spot.Address, data);
 			}
 		}
 
 		public string ReadValueFromMemory(MemoryBuffer memory)
 		{
-			return memory.ReadString(Encoding, Offset, MemorySize);
+			return memory.ReadString(Encoding, Offset, MemorySize, true);
 		}
 	}
 }

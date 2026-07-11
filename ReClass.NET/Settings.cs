@@ -47,7 +47,7 @@ namespace ReClassNET
 
 		public bool HighlightChangedValues { get; set; } = true;
 
-		public Encoding RawDataEncoding { get; set; } = Encoding.GetEncoding(1252); /* Windows-1252 */
+		public Encoding RawDataEncoding { get; set; } = Encoding.Default;
 
 		// Comment Drawing Settings
 

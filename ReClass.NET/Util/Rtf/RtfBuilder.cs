@@ -214,7 +214,10 @@ namespace ReClassNET.Util.Rtf
 		{
 			var sb = new StringBuilder();
 
-			sb.Append(@"{\rtf1\ansi\ansicpg1252\deff0\deflang3081");
+			var codePage = Encoding.Default.CodePage;
+			var langId = System.Globalization.CultureInfo.CurrentCulture.LCID;
+
+			sb.Append($@"{{\rtf1\ansi\ansicpg{codePage}\deff0\deflang{langId}");
 
 			sb.Append(@"{\fonttbl");
 			for (var i = 0; i < usedFonts.Count; ++i)

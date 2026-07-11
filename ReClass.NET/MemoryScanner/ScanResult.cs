@@ -261,7 +261,7 @@ namespace ReClassNET.MemoryScanner
 	{
 		public override ScanValueType ValueType => ScanValueType.String;
 
-		public override int ValueSize => Value.Length * Encoding.GuessByteCountPerChar();
+		public override int ValueSize => Encoding.GetByteCount(Value);
 
 		public string Value { get; }
 

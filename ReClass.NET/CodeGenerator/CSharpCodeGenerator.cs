@@ -37,6 +37,7 @@ namespace ReClassNET.CodeGenerator
 			[typeof(Utf8TextPtrNode)] = "IntPtr",
 			[typeof(Utf16TextPtrNode)] = "IntPtr",
 			[typeof(Utf32TextPtrNode)] = "IntPtr",
+			[typeof(DefaultTextPtrNode)] = "IntPtr",
 			[typeof(PointerNode)] = "IntPtr",
 			[typeof(VirtualMethodTableNode)] = "IntPtr",
 
@@ -179,7 +180,7 @@ namespace ReClassNET.CodeGenerator
 			Contract.Requires(@class != null);
 			Contract.Requires(logger != null);
 
-			writer.WriteLine("[StructLayout(LayoutKind.Explicit, CharSet = CharSet.Ansi)]");
+			writer.WriteLine("[StructLayout(LayoutKind.Explicit, CharSet = CharSet.Unicode)]");
 			writer.Write("public struct ");
 			writer.Write(@class.Name);
 
@@ -253,6 +254,9 @@ namespace ReClassNET.CodeGenerator
 
 				case Utf8TextNode utf8TextNode:
 					return ("char[]", $"[MarshalAs(UnmanagedType.ByValArray, SizeConst = {utf8TextNode.Length})]");
+
+				case DefaultTextNode defaultTextNode:
+					return ("string", $"[MarshalAs(UnmanagedType.ByValTStr, SizeConst = {defaultTextNode.Length})]");
 
 				case Utf16TextNode utf16TextNode:
 					return (GetUnicodeStringClassName(utf16TextNode.Length), "[MarshalAs(UnmanagedType.Struct)]");

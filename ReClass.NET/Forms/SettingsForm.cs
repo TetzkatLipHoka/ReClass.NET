@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Drawing;
 using System.Linq;
+using System.Text;
 using System.Windows.Forms;
 using DarkModeForms;
 using ReClassNET.Controls;
@@ -51,6 +52,19 @@ namespace ReClassNET.Forms
 			SetColorBindings();
 			SetTypeDefinitionBindings();
 			SetHotkeyBindings();
+
+			var encodings = new[]
+			{
+				Encoding.UTF8,
+				Encoding.Unicode,
+				Encoding.UTF32,
+				Encoding.Default,
+				Encoding.ASCII
+			};
+			rawDataEncodingComboBox.DataSource = encodings;
+			rawDataEncodingComboBox.DisplayMember = nameof(Encoding.EncodingName);
+			rawDataEncodingComboBox.SelectedItem = encodings.FirstOrDefault(e => e.CodePage == settings.RawDataEncoding.CodePage);
+			rawDataEncodingComboBox.SelectedIndexChanged += (s, e) => settings.RawDataEncoding = (Encoding)rawDataEncodingComboBox.SelectedItem;
 
 			if (NativeMethods.IsUnix())
 			{

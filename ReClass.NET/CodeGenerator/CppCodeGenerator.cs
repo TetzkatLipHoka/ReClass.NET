@@ -148,6 +148,8 @@ namespace ReClassNET.CodeGenerator
 				[typeof(Utf8CharacterNode)] = typeMapping.TypeUtf8Text,
 				[typeof(Utf16CharacterNode)] = typeMapping.TypeUtf16Text,
 				[typeof(Utf32CharacterNode)] = typeMapping.TypeUtf32Text,
+				[typeof(DefaultTextNode)] = typeMapping.TypeUtf8Text,
+				[typeof(DefaultTextPtrNode)] = typeMapping.TypeUtf8Text,
 				[typeof(Vector2Node)] = typeMapping.TypeVector2,
 				[typeof(Vector3Node)] = typeMapping.TypeVector3,
 				[typeof(Vector4Node)] = typeMapping.TypeVector4
