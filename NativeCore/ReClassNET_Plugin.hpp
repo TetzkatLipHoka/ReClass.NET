@@ -146,7 +146,7 @@ struct EnumerateRemoteSectionData
 	SectionType Type;
 	SectionCategory Category;
 	SectionProtection Protection;
-	RC_UnicodeChar Name[16];
+	RC_UnicodeChar Name[120];
 	RC_UnicodeChar ModulePath[PATH_MAXIMUM_LENGTH];
 };
 

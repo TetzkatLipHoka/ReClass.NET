@@ -43,7 +43,7 @@ namespace ReClassNET.Core
 
 		public SectionProtection Protection;
 
-		[MarshalAs(UnmanagedType.ByValTStr, SizeConst = 16)]
+		[MarshalAs(UnmanagedType.ByValTStr, SizeConst = 120)]
 		public string Name;
 
 		[MarshalAs(UnmanagedType.ByValTStr, SizeConst = 260)]

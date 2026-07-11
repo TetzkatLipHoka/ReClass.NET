@@ -63,6 +63,26 @@ namespace ReClassNET.Forms
 
 		private async void ProcessInfoForm_Load(object sender, EventArgs e)
 		{
+			await PopulateAsync();
+		}
+
+		private async void refreshButton_Click(object sender, EventArgs e)
+		{
+			await PopulateAsync();
+		}
+
+		/// <summary>Formats the section protection flags as a readable "rwxpg" string.</summary>
+		private static string FormatProtection(SectionProtection protection)
+		{
+			return $"{(protection.HasFlag(SectionProtection.Read) ? 'r' : '-')}" +
+				$"{(protection.HasFlag(SectionProtection.Write) ? 'w' : '-')}" +
+				$"{(protection.HasFlag(SectionProtection.Execute) ? 'x' : '-')}" +
+				$"{(protection.HasFlag(SectionProtection.CopyOnWrite) ? 'p' : '-')}" +
+				$"{(protection.HasFlag(SectionProtection.Guard) ? 'g' : '-')}";
+		}
+
+		private async Task PopulateAsync()
+		{
 			var sectionsTable = new DataTable();
 			sectionsTable.Columns.Add("address", typeof(string));
 			sectionsTable.Columns.Add("size", typeof(string));
@@ -90,7 +110,7 @@ namespace ReClassNET.Forms
 						row["address"] = section.Start.ToString(Constants.AddressHexFormat);
 						row["size"] = section.Size.ToString(Constants.AddressHexFormat);
 						row["name"] = section.Name;
-						row["protection"] = section.Protection.ToString();
+						row["protection"] = FormatProtection(section.Protection);
 						row["type"] = section.Type.ToString();
 						row["module"] = section.ModuleName;
 						row["section"] = section;
@@ -112,6 +132,33 @@ namespace ReClassNET.Forms
 
 			sectionsDataGridView.DataSource = sectionsTable;
 			modulesDataGridView.DataSource = modulesTable;
+
+			ApplyFilter();
+		}
+
+		private void filterTextBox_TextChanged(object sender, EventArgs e)
+		{
+			ApplyFilter();
+		}
+
+		/// <summary>Filters the sections and modules grids by the filter text (address, name, path or module).</summary>
+		private void ApplyFilter()
+		{
+			var filter = filterTextBox.Text.Replace("'", "''");
+
+			if (sectionsDataGridView.DataSource is DataTable sectionsTable)
+			{
+				sectionsTable.DefaultView.RowFilter = string.IsNullOrEmpty(filter)
+					? string.Empty
+					: $"name LIKE '%{filter}%' OR module LIKE '%{filter}%' OR address LIKE '%{filter}%'";
+			}
+
+			if (modulesDataGridView.DataSource is DataTable modulesTable)
+			{
+				modulesTable.DefaultView.RowFilter = string.IsNullOrEmpty(filter)
+					? string.Empty
+					: $"name LIKE '%{filter}%' OR path LIKE '%{filter}%' OR address LIKE '%{filter}%'";
+			}
 		}
 
 		private void SelectRow_CellMouseDown(object sender, DataGridViewCellMouseEventArgs e)

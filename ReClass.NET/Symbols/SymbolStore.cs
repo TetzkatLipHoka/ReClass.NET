@@ -225,9 +225,15 @@ namespace ReClassNET.Symbols
 			{
 				if (!symbolReaders.TryGetValue(name, out var reader))
 				{
-					name = Path.ChangeExtension(name, ".pdb");
+					// Only rewrite the extension when the module name is a valid path. Some
+					// platforms (e.g. Android) allow characters that are invalid in Windows
+					// paths, which would make Path.ChangeExtension throw.
+					if (name.IndexOfAny(Path.GetInvalidPathChars()) < 0)
+					{
+						name = Path.ChangeExtension(name, ".pdb");
 
-					symbolReaders.TryGetValue(name, out reader);
+						symbolReaders.TryGetValue(name, out reader);
+					}
 				}
 				return reader;
 			}
