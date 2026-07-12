@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net9.0-windows</TargetFramework>
+    <TargetFramework>net10.0-windows</TargetFramework>
     <OutputType>WinExe</OutputType>
     <RootNamespace>ReClassNET</RootNamespace>
     <AssemblyName>ReClass.NET</AssemblyName>
@@ -19,9 +19,10 @@
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
     <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
-    <!-- WFO1000: WinForms designer-serialization analyzer; these control properties are set at
-         runtime, not serialized by the designer, so the nag is suppressed project-wide. -->
-    <NoWarn>$(NoWarn);NU1701;CS1591;WFO1000</NoWarn>
+    <!-- WFO1000: WinForms designer-serialization analyzer (properties set at runtime, not
+         serialized). CA1416: Windows-platform analyzer; this is a Windows-only WinForms app on a
+         -windows TFM, so the Windows-API warnings are noise. Both suppressed project-wide. -->
+    <NoWarn>$(NoWarn);NU1701;CS1591;WFO1000;CA1416</NoWarn>
     <ProduceReferenceAssembly>false</ProduceReferenceAssembly>
   </PropertyGroup>
 
@@ -53,8 +54,8 @@
     <PackageReference Include="SD.Tools.Algorithmia" Version="1.4.0" />
     <PackageReference Include="SD.Tools.BCLExtensions" Version="1.2.2" />
     <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
-    <PackageReference Include="System.Configuration.ConfigurationManager" Version="9.0.0" />
-    <PackageReference Include="System.Text.Encoding.CodePages" Version="9.0.0" />
+    <!-- System.Configuration.ConfigurationManager and System.Text.Encoding.CodePages are part of
+         the net10 shared framework, so they no longer need an explicit PackageReference. -->
   </ItemGroup>
 
   <ItemGroup>
