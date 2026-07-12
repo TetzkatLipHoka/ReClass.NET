@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using ReClassNET.DataExchange.ReClass;
+using ReClassNET.Logger;
 using ReClassNET.Plugins;
 using ReClassNET.UI;
 
@@ -17,7 +18,23 @@ namespace ReClassNET.Forms
 		{
 			private readonly PluginInfo plugin;
 
-			public Image Icon => plugin.Interface?.Icon ?? Properties.Resources.B16x16_Plugin;
+			public Image Icon
+			{
+				get
+				{
+					try
+					{
+						return plugin.Interface?.Icon ?? Properties.Resources.B16x16_Plugin;
+					}
+					catch
+					{
+						// Some plugins store their icon in a BinaryFormatter-serialized resource,
+						// which can no longer be deserialized on modern .NET. Fall back to the
+						// default plugin icon instead of failing the whole grid.
+						return Properties.Resources.B16x16_Plugin;
+					}
+				}
+			}
 			public string Name => plugin.Name;
 			public string Version => plugin.FileVersion;
 			public string Author => plugin.Author;
@@ -40,10 +57,24 @@ namespace ReClassNET.Forms
 			InitializeComponent();
 			UpdatePluginsInfo(pm);
 		}
+		private static void PluginsDataGridView_DataError(object sender, DataGridViewDataErrorEventArgs e)
+		{
+			// A plugin's bound property (e.g. an icon stored in a legacy BinaryFormatter resource)
+			// threw while the grid was reading it. Log it and keep the dialog from popping up.
+			Program.Logger.Log(LogLevel.Error, $"Failed to read plugin info (row {e.RowIndex}, column {e.ColumnIndex}).");
+			if (e.Exception != null)
+			{
+				Program.Logger.Log(e.Exception);
+			}
+			e.ThrowException = false;
+		}
+
 		internal void UpdatePluginsInfo(PluginManager pm)
 		{
 			// Plugins Tab
 			pluginsDataGridView.AutoGenerateColumns = false;
+			pluginsDataGridView.DataError -= PluginsDataGridView_DataError;
+			pluginsDataGridView.DataError += PluginsDataGridView_DataError;
 			pluginsDataGridView.DataSource = pm.Plugins.Select(p => new PluginInfoRow(p)).ToList();
 
 			UpdatePluginDescription();
