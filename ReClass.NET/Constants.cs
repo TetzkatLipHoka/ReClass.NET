@@ -6,7 +6,7 @@ namespace ReClassNET
 
 		public const string ApplicationExecutableName = ApplicationName + ".exe";
 
-		public const string ApplicationVersion = "1.2.2";
+		public const string ApplicationVersion = "1.3.0";
 
 		public const string LauncherExecutableName = ApplicationName + "_Launcher.exe";
 
