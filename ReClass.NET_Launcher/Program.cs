@@ -32,7 +32,9 @@ namespace ReClassNET_Launcher
 				return;
 			}
 
-			var is64Bit = IntPtr.Size == 8;
+			// Use the OS bitness, not the launcher process bitness, so an x86 launcher still
+			// starts the x64 build on a 64-bit OS.
+			var is64Bit = Environment.Is64BitOperatingSystem;
 
 			// If there is a file in the commandline, read the platform.
 			if (commandLineArgs.FileName != null)
@@ -52,10 +54,15 @@ namespace ReClassNET_Launcher
 
 			try
 			{
+				// The launcher is already elevated (see app.manifest), so start the
+				// (requireAdministrator) application directly via CreateProcess instead of
+				// ShellExecute (which fails to elevate when UAC is disabled). Set the working
+				// directory so the app's native dependencies (NativeCore.dll, libclang, ...) resolve.
 				var processStartInfo = new ProcessStartInfo
 				{
 					FileName = applicationPath,
-					UseShellExecute = true,
+					WorkingDirectory = Path.GetDirectoryName(applicationPath),
+					UseShellExecute = false,
 					WindowStyle = ProcessWindowStyle.Normal
 				};
 				var arguments = GetCommandLineWithoutExecutablePath();
@@ -66,9 +73,11 @@ namespace ReClassNET_Launcher
 
 				Process.Start(processStartInfo);
 			}
-			catch (Exception)
+			catch (Exception ex)
 			{
-				MessageBox.Show($"Could not start '{applicationPath}'.", Constants.ApplicationName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+				MessageBox.Show(
+					$"Could not start '{applicationPath}'.{Environment.NewLine}{Environment.NewLine}{ex.Message}",
+					Constants.ApplicationName, MessageBoxButtons.OK, MessageBoxIcon.Error);
 			}
 		}
 
@@ -108,7 +117,10 @@ namespace ReClassNET_Launcher
 			{
 				argIndex = commandLine.IndexOf(" ", StringComparison.Ordinal);
 			}
-			if (argIndex != -1)
+			// Guard against argIndex pointing at (or past) the end of the string, which happens
+			// when the launcher is started without arguments (command line is just the quoted
+			// executable path). Substring(argIndex + 1) would otherwise throw.
+			if (argIndex != -1 && argIndex + 1 <= commandLine.Length)
 			{
 				arguments = commandLine.Substring(argIndex + 1);
 			}
